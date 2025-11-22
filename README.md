@@ -45,7 +45,7 @@ A modern React/Next.js application for discovering and exploring local events us
 - Firebase project (for authentication)
 - Ticketmaster API key
 
-### Installation
+### Running the App Locally
 
 1. Clone the repository
    ```bash
@@ -60,7 +60,7 @@ A modern React/Next.js application for discovering and exploring local events us
 
 3. Configure environment variables
    
-   Create a `.env.local` file in the root directory:
+   Create a `.env` file in the root directory with all required keys:
    ```env
    # Firebase Configuration
    NEXT_PUBLIC_FIREBASE_API_KEY=your_firebase_api_key
@@ -73,8 +73,10 @@ A modern React/Next.js application for discovering and exploring local events us
    # Ticketmaster API
    NEXT_PUBLIC_TICKETMASTER_API_KEY=your_ticketmaster_api_key
    ```
+   
+   All required environment variables are listed above. Replace the placeholder values with your actual API keys.
 
-4. Run the development server
+4. Start the development server
    ```bash
    npm run dev
    ```
@@ -103,12 +105,13 @@ The production server will run on `http://localhost:3000` by default.
 # Install dependencies
 npm install
 
-# Set up environment variables (create .env.local file)
-# See "Configure environment variables" section above
+# Create .env.local file with all required keys (see Setup Instructions above)
 
 # Start development server
 npm run dev
 ```
+
+The app will be available at [http://localhost:3000](http://localhost:3000)
 
 ### Quick Start (Production)
 
