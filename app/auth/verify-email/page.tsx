@@ -60,18 +60,18 @@ function VerifyEmailContent() {
 
   if (!isLink) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-zinc-50 dark:bg-black px-4">
+      <div className="flex min-h-screen items-center justify-center bg-zinc-50 dark:bg-black px-4 py-8">
         <div className="w-full max-w-md">
-          <div className="bg-white dark:bg-zinc-900 rounded-lg shadow-lg p-8 text-center">
-            <h1 className="text-2xl font-bold mb-4 text-black dark:text-white">
+          <div className="bg-white dark:bg-zinc-900 rounded-lg shadow-lg p-6 sm:p-8 text-center">
+            <h1 className="text-xl sm:text-2xl font-bold mb-4 text-black dark:text-white">
               {t('invalidLink')}
             </h1>
-            <p className="text-zinc-600 dark:text-zinc-400 mb-6">
+            <p className="text-sm sm:text-base text-zinc-600 dark:text-zinc-400 mb-6">
               {t('linkNotValid')}
             </p>
             <button
               onClick={() => router.push('/login')}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors"
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 sm:py-3 px-4 rounded-lg transition-colors text-sm sm:text-base"
             >
               {t('goToLogin')}
             </button>
@@ -82,33 +82,33 @@ function VerifyEmailContent() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 dark:bg-black px-4">
+    <div className="flex min-h-screen items-center justify-center bg-zinc-50 dark:bg-black px-4 py-8">
       <div className="w-full max-w-md">
-        <div className="bg-white dark:bg-zinc-900 rounded-lg shadow-lg p-8">
-          <h1 className="text-2xl font-bold text-center mb-2 text-black dark:text-white">
+        <div className="bg-white dark:bg-zinc-900 rounded-lg shadow-lg p-6 sm:p-8">
+          <h1 className="text-xl sm:text-2xl font-bold text-center mb-2 text-black dark:text-white">
             {t('completeSignIn')}
           </h1>
-          <p className="text-center text-zinc-600 dark:text-zinc-400 mb-8">
+          <p className="text-center text-sm sm:text-base text-zinc-600 dark:text-zinc-400 mb-6 sm:mb-8">
             {t('confirmEmailToComplete')}
           </p>
 
           {error && (
-            <div className="mb-4 p-3 bg-red-100 dark:bg-red-900/30 border border-red-400 dark:border-red-800 text-red-700 dark:text-red-400 rounded">
+            <div className="mb-4 p-3 bg-red-100 dark:bg-red-900/30 border border-red-400 dark:border-red-800 text-red-700 dark:text-red-400 rounded text-sm sm:text-base">
               {error}
             </div>
           )}
 
           {isVerifying ? (
-            <div className="text-center py-8">
+            <div className="text-center py-6 sm:py-8">
               <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite] mb-4"></div>
-              <p className="text-zinc-600 dark:text-zinc-400">{t('verifyingEmailLink')}</p>
+              <p className="text-sm sm:text-base text-zinc-600 dark:text-zinc-400">{t('verifyingEmailLink')}</p>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
               <div>
                 <label
                   htmlFor="email"
-                  className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2"
+                  className="block text-xs sm:text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1.5 sm:mb-2"
                 >
                   {t('emailAddress')}
                 </label>
@@ -119,10 +119,10 @@ function VerifyEmailContent() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-4 py-2 border border-zinc-300 dark:border-zinc-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-zinc-800 text-black dark:text-white"
+                  className="w-full px-3 sm:px-4 py-2 sm:py-2.5 text-sm sm:text-base border border-zinc-300 dark:border-zinc-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-zinc-800 text-black dark:text-white"
                   placeholder="you@example.com"
                 />
-                <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
+                <p className="mt-1 text-[10px] sm:text-xs text-zinc-500 dark:text-zinc-400">
                   {t('enterEmailReceivedLink')}
                 </p>
               </div>
@@ -130,7 +130,7 @@ function VerifyEmailContent() {
               <button
                 type="submit"
                 disabled={loading || isVerifying}
-                className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-semibold py-3 px-4 rounded-lg transition-colors duration-200 disabled:cursor-not-allowed"
+                className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-semibold py-2.5 sm:py-3 px-4 rounded-lg transition-colors duration-200 disabled:cursor-not-allowed text-sm sm:text-base"
               >
                 {t('completeSignIn')}
               </button>

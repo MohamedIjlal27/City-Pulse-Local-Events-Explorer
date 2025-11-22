@@ -93,18 +93,19 @@ function EventDetailContent() {
       <AppHeader />
       <div className="border-b border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex h-12 items-center justify-between">
+          <div className="flex h-12 sm:h-14 items-center justify-between">
             <Link
               href="/events"
-              className="text-sm font-medium text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white transition-colors flex items-center gap-2"
+              className="text-xs sm:text-sm font-medium text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white transition-colors flex items-center gap-1 sm:gap-2"
             >
               <span>←</span>
-              <span>{t('events')}</span>
+              <span className="hidden sm:inline">{t('events')}</span>
+              <span className="sm:hidden">Back</span>
             </Link>
             {isAuthenticated && (
               <button
                 onClick={handleToggleFavorite}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors ${
                   isFav
                     ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
                     : 'bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300'
@@ -117,35 +118,35 @@ function EventDetailContent() {
         </div>
       </div>
 
-      <main className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-8">
+      <main className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
         {event.imageUrl && (
-          <div className="mb-8 rounded-lg overflow-hidden">
+          <div className="mb-4 sm:mb-8 rounded-lg overflow-hidden">
             <img
               src={event.imageUrl}
               alt={event.title}
-              className="w-full h-96 object-cover"
+              className="w-full h-48 sm:h-64 md:h-80 lg:h-96 object-cover"
             />
           </div>
         )}
 
-        <div className="bg-white dark:bg-zinc-900 rounded-lg shadow-lg p-8">
-          <h1 className="text-4xl font-bold text-black dark:text-white mb-4">
+        <div className="bg-white dark:bg-zinc-900 rounded-lg shadow-lg p-4 sm:p-6 md:p-8">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-black dark:text-white mb-4">
             {event.title}
           </h1>
 
-          <div className="space-y-4 mb-8">
-            <div className="flex items-center gap-2 text-zinc-600 dark:text-zinc-400">
-              <span className="text-2xl">📅</span>
+          <div className="space-y-3 sm:space-y-4 mb-6 sm:mb-8">
+            <div className="flex items-start gap-2 text-zinc-600 dark:text-zinc-400">
+              <span className="text-xl sm:text-2xl flex-shrink-0">📅</span>
               <div>
-                <p className="font-medium">{formatDate(event.date)}</p>
-                {event.time && <p className="text-sm">{t('at')} {event.time}</p>}
+                <p className="font-medium text-sm sm:text-base">{formatDate(event.date)}</p>
+                {event.time && <p className="text-xs sm:text-sm">{t('at')} {event.time}</p>}
               </div>
             </div>
 
             <div className="space-y-2">
-              <div className="flex items-center gap-2 text-zinc-600 dark:text-zinc-400">
-                <span className="text-2xl">📍</span>
-                <p className="font-medium">{event.location}</p>
+              <div className="flex items-start gap-2 text-zinc-600 dark:text-zinc-400">
+                <span className="text-xl sm:text-2xl flex-shrink-0">📍</span>
+                <p className="font-medium text-sm sm:text-base break-words">{event.location}</p>
               </div>
               {event.latitude && event.longitude && (
                 <div className="mt-4">
@@ -160,26 +161,26 @@ function EventDetailContent() {
 
             {event.price && (
               <div className="flex items-center gap-2 text-zinc-600 dark:text-zinc-400">
-                <span className="text-2xl">💰</span>
-                <p>{t('from')} ${event.price}</p>
+                <span className="text-xl sm:text-2xl flex-shrink-0">💰</span>
+                <p className="text-sm sm:text-base">{t('from')} ${event.price}</p>
               </div>
             )}
 
             {event.organizer && (
-              <div className="flex items-center gap-2 text-zinc-600 dark:text-zinc-400">
-                <span className="text-2xl">🎤</span>
-                <p>{event.organizer}</p>
+              <div className="flex items-start gap-2 text-zinc-600 dark:text-zinc-400">
+                <span className="text-xl sm:text-2xl flex-shrink-0">🎤</span>
+                <p className="text-sm sm:text-base break-words">{event.organizer}</p>
               </div>
             )}
 
-            <div className="flex items-center gap-2">
-              <span className="px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 rounded-full text-sm font-medium">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="px-2 sm:px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 rounded-full text-xs sm:text-sm font-medium">
                 {event.category}
               </span>
               {event.tags?.map((tag, idx) => (
                 <span
                   key={idx}
-                  className="px-3 py-1 bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 rounded-full text-sm"
+                  className="px-2 sm:px-3 py-1 bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 rounded-full text-xs sm:text-sm"
                 >
                   {tag}
                 </span>
@@ -187,11 +188,11 @@ function EventDetailContent() {
             </div>
           </div>
 
-          <div className="border-t border-zinc-200 dark:border-zinc-800 pt-6">
-            <h2 className="text-xl font-semibold text-black dark:text-white mb-3">
+          <div className="border-t border-zinc-200 dark:border-zinc-800 pt-4 sm:pt-6">
+            <h2 className="text-lg sm:text-xl font-semibold text-black dark:text-white mb-3">
               {t('eventDetails')}
             </h2>
-            <p className="text-zinc-600 dark:text-zinc-400 leading-relaxed">
+            <p className="text-sm sm:text-base text-zinc-600 dark:text-zinc-400 leading-relaxed">
               {event.description}
             </p>
           </div>

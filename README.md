@@ -10,8 +10,11 @@ A modern React/Next.js application for discovering and exploring local events us
 - Multi-language Support: Toggle between English and Arabic with RTL layout support
 - User Authentication: Firebase authentication with Email/Password, Email Link, and Google Sign-In
 - User Profile: Display user information, saved events, and preferences
-- Responsive Design: Mobile-first design with dark mode support
+- Fully Responsive Design: Mobile-first design optimized for all screen sizes (320px+)
+- Mobile Navigation: Hamburger menu for easy mobile navigation
+- Dark Mode Support: Seamless dark mode with automatic theme detection
 - Local Data Persistence: All user data saved to localStorage
+- Touch-Optimized: Enhanced touch targets and interactions for mobile devices
 
 ## Requirements Checklist
 
@@ -229,6 +232,38 @@ The event detail page includes an interactive map preview when coordinates are a
 - Shows event location with a marker
 - Clickable marker with event title popup
 - No API key required (uses free OpenStreetMap tiles)
+
+## Mobile Responsive Features
+
+The application is fully optimized for mobile devices with the following enhancements:
+
+### Navigation
+- **Hamburger Menu**: Collapsible mobile menu for screens < 768px
+- **Responsive Header**: Logo and navigation items adapt to screen size
+- **Touch-Friendly**: All buttons and links have adequate touch targets (44px minimum)
+
+### Layout Optimizations
+- **Flexible Grid**: Event cards stack vertically on mobile (1 column), 2 columns on tablets, 3 on desktop
+- **Responsive Typography**: Font sizes scale from mobile (text-sm) to desktop (text-base)
+- **Adaptive Spacing**: Padding and margins adjust based on screen size
+- **Full-Width Forms**: Input fields and buttons use full width on mobile for easy interaction
+
+### Component Optimizations
+- **Event Cards**: Images scale from 192px (mobile) to 384px (desktop)
+- **Pagination**: Compact mobile view with arrow symbols, full text on desktop
+- **Profile Layout**: Vertical layout on mobile, horizontal on tablets+
+- **Forms**: Reduced padding and font sizes on mobile for better space utilization
+
+### Technical Enhancements
+- **Viewport Meta Tag**: Proper viewport configuration for mobile browsers
+- **Touch Optimization**: Disabled tap highlight and improved focus visibility
+- **Smooth Scrolling**: Enhanced scroll behavior for better mobile UX
+- **Overflow Control**: Prevents horizontal scroll on mobile devices
+
+### Breakpoints Used
+- Mobile: 320px - 640px (base styles)
+- Tablet: 640px - 1024px (sm: and md: prefixes)
+- Desktop: 1024px+ (lg: and xl: prefixes)
 
 ## Known Issues
 

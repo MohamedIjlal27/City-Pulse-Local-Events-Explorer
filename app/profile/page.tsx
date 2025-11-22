@@ -39,17 +39,17 @@ export default function ProfilePage() {
     <div className="min-h-screen bg-zinc-50 dark:bg-black">
       <AppHeader />
 
-      <main className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-8">
-        <div className="bg-white dark:bg-zinc-900 rounded-lg shadow-lg p-8 mb-6">
-          <div className="flex items-center gap-6 mb-6">
+      <main className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
+        <div className="bg-white dark:bg-zinc-900 rounded-lg shadow-lg p-4 sm:p-6 md:p-8 mb-4 sm:mb-6">
+          <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-6 mb-6">
             {user?.photoURL ? (
               <img
                 src={user.photoURL}
                 alt={user.displayName || user.email || t('user')}
-                className="w-24 h-24 rounded-full object-cover border-4 border-zinc-200 dark:border-zinc-700"
+                className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover border-4 border-zinc-200 dark:border-zinc-700 flex-shrink-0"
               />
             ) : (
-              <div className="w-24 h-24 rounded-full bg-blue-600 dark:bg-blue-500 flex items-center justify-center text-white text-3xl font-semibold border-4 border-zinc-200 dark:border-zinc-700">
+              <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-blue-600 dark:bg-blue-500 flex items-center justify-center text-white text-2xl sm:text-3xl font-semibold border-4 border-zinc-200 dark:border-zinc-700 flex-shrink-0">
                 {(user?.displayName || user?.email || 'U')
                   .split(' ')
                   .map((n) => n[0])
@@ -58,38 +58,38 @@ export default function ProfilePage() {
                   .slice(0, 2)}
               </div>
             )}
-            <div>
-              <h1 className="text-3xl font-bold text-black dark:text-white mb-2">
+            <div className="text-center sm:text-left">
+              <h1 className="text-2xl sm:text-3xl font-bold text-black dark:text-white mb-2">
                 {t('profile')}
               </h1>
-              <p className="text-lg text-zinc-600 dark:text-zinc-400">
+              <p className="text-base sm:text-lg text-zinc-600 dark:text-zinc-400 break-words">
                 {user?.displayName || user?.email || t('user')}
               </p>
             </div>
           </div>
 
-          <div className="space-y-4 mb-6">
+          <div className="space-y-3 sm:space-y-4 mb-6">
             <div>
-              <label className="text-sm font-medium text-zinc-600 dark:text-zinc-400">
+              <label className="text-xs sm:text-sm font-medium text-zinc-600 dark:text-zinc-400">
                 {t('welcome')}
               </label>
-              <p className="text-lg text-black dark:text-white">
+              <p className="text-base sm:text-lg text-black dark:text-white break-words">
                 {user?.displayName || user?.email || t('user')}
               </p>
             </div>
 
             <div>
-              <label className="text-sm font-medium text-zinc-600 dark:text-zinc-400">
+              <label className="text-xs sm:text-sm font-medium text-zinc-600 dark:text-zinc-400">
                 {t('email')}
               </label>
-              <p className="text-lg text-black dark:text-white">{user?.email}</p>
+              <p className="text-base sm:text-lg text-black dark:text-white break-words">{user?.email}</p>
             </div>
 
             <div>
-              <label className="text-sm font-medium text-zinc-600 dark:text-zinc-400">
+              <label className="text-xs sm:text-sm font-medium text-zinc-600 dark:text-zinc-400">
                 {t('language')}
               </label>
-              <p className="text-lg text-black dark:text-white">
+              <p className="text-base sm:text-lg text-black dark:text-white">
                 {language === 'en' ? t('english') : t('arabic')} ({isRTL ? 'RTL' : 'LTR'})
               </p>
             </div>
@@ -97,14 +97,14 @@ export default function ProfilePage() {
 
           <button
             onClick={handleLogout}
-            className="w-full sm:w-auto px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg transition-colors"
+            className="w-full sm:w-auto px-6 py-2.5 sm:py-3 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg transition-colors text-sm sm:text-base"
           >
             {t('logout')}
           </button>
         </div>
 
-        <div className="bg-white dark:bg-zinc-900 rounded-lg shadow-lg p-8">
-          <h2 className="text-2xl font-bold text-black dark:text-white mb-6">
+        <div className="bg-white dark:bg-zinc-900 rounded-lg shadow-lg p-4 sm:p-6 md:p-8">
+          <h2 className="text-xl sm:text-2xl font-bold text-black dark:text-white mb-4 sm:mb-6">
             {t('savedEvents')} ({favorites.length})
           </h2>
 

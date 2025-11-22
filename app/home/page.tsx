@@ -35,54 +35,56 @@ export default function Home() {
       <AppHeader />
 
       <main className="flex-1">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 sm:py-12 md:py-16">
           <div className="text-center">
-            <h2 className="text-4xl font-bold tracking-tight text-black dark:text-white sm:text-5xl md:text-6xl">
+            <h2 className="text-3xl font-bold tracking-tight text-black dark:text-white sm:text-4xl md:text-5xl lg:text-6xl">
               {t('discoverEvents')}
               <br />
               <span className="text-blue-600 dark:text-blue-400">
                 {t('inYourCity')}
               </span>
             </h2>
-            <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-zinc-600 dark:text-zinc-400">
+            <p className="mx-auto mt-4 sm:mt-6 max-w-2xl text-base sm:text-lg leading-7 sm:leading-8 text-zinc-600 dark:text-zinc-400 px-4">
               {t('exploreDescription')}
             </p>
 
-            <div className="mt-10 max-w-2xl mx-auto">
+            <div className="mt-6 sm:mt-10 max-w-2xl mx-auto px-4">
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
                   search(searchKeyword, searchCity);
                 }}
-                className="flex flex-col sm:flex-row gap-3"
+                className="flex flex-col gap-3"
               >
                 <input
                   type="text"
                   value={searchKeyword}
                   onChange={(e) => setSearchKeyword(e.target.value)}
                   placeholder={t('searchPlaceholder')}
-                  className="flex-1 px-4 py-3 border border-zinc-300 dark:border-zinc-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-zinc-800 text-black dark:text-white"
+                  className="w-full px-4 py-2.5 sm:py-3 border border-zinc-300 dark:border-zinc-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-zinc-800 text-black dark:text-white text-sm sm:text-base"
                 />
-                <select
-                  value={searchCity}
-                  onChange={(e) => setSearchCity(e.target.value)}
-                  className="w-full sm:w-48 px-4 py-3 border border-zinc-300 dark:border-zinc-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-zinc-800 text-black dark:text-white"
-                  disabled={citiesLoading}
-                >
-                  <option value="">{t('cityPlaceholder')}</option>
-                  {cities.map((city) => (
-                    <option key={city} value={city}>
-                      {city}
-                    </option>
-                  ))}
-                </select>
-                <button
-                  type="submit"
-                  disabled={searchLoading || !searchKeyword.trim()}
-                  className="px-6 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-semibold rounded-lg transition-colors disabled:cursor-not-allowed"
-                >
-                  {searchLoading ? t('search') + '...' : t('search')}
-                </button>
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <select
+                    value={searchCity}
+                    onChange={(e) => setSearchCity(e.target.value)}
+                    className="w-full sm:flex-1 px-4 py-2.5 sm:py-3 border border-zinc-300 dark:border-zinc-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-zinc-800 text-black dark:text-white text-sm sm:text-base"
+                    disabled={citiesLoading}
+                  >
+                    <option value="">{t('cityPlaceholder')}</option>
+                    {cities.map((city) => (
+                      <option key={city} value={city}>
+                        {city}
+                      </option>
+                    ))}
+                  </select>
+                  <button
+                    type="submit"
+                    disabled={searchLoading || !searchKeyword.trim()}
+                    className="w-full sm:w-auto px-6 py-2.5 sm:py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-semibold rounded-lg transition-colors disabled:cursor-not-allowed text-sm sm:text-base"
+                  >
+                    {searchLoading ? t('search') + '...' : t('search')}
+                  </button>
+                </div>
               </form>
 
               {searchError && (
@@ -93,11 +95,11 @@ export default function Home() {
             </div>
 
             {events.length > 0 && (
-              <div className="mt-12 max-w-7xl mx-auto">
-                <h3 className="text-2xl font-bold text-black dark:text-white mb-6">
+              <div className="mt-8 sm:mt-12 max-w-7xl mx-auto">
+                <h3 className="text-xl sm:text-2xl font-bold text-black dark:text-white mb-4 sm:mb-6 px-4">
                   {t('searchResults')} ({events.length})
                 </h3>
-                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                <div className="grid grid-cols-1 gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3">
                   {events.map((event) => (
                     <EventCard key={event.id} event={event} toggleFavorite={toggleFavorite} checkIsFavorite={checkIsFavorite} isFavorite={checkIsFavorite(event.id)} t={t} formatDateShort={formatDateShort} />
                   ))}
@@ -105,11 +107,11 @@ export default function Home() {
               </div>
             )}
 
-            <div className="mt-10 flex items-center justify-center gap-x-6">
+            <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-x-6 px-4">
               {isAuthenticated ? (
                 <Link
                   href="/events"
-                  className="rounded-lg bg-blue-600 px-6 py-3 text-base font-semibold text-white shadow-sm hover:bg-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 transition-colors"
+                  className="w-full sm:w-auto text-center rounded-lg bg-blue-600 px-6 py-2.5 sm:py-3 text-sm sm:text-base font-semibold text-white shadow-sm hover:bg-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 transition-colors"
                 >
                   Browse Events
                 </Link>
@@ -117,13 +119,13 @@ export default function Home() {
                 <>
                   <Link
                     href="/register"
-                    className="rounded-lg bg-blue-600 px-6 py-3 text-base font-semibold text-white shadow-sm hover:bg-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 transition-colors"
+                    className="w-full sm:w-auto text-center rounded-lg bg-blue-600 px-6 py-2.5 sm:py-3 text-sm sm:text-base font-semibold text-white shadow-sm hover:bg-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 transition-colors"
                   >
                     {t('getStarted')}
                   </Link>
                   <Link
                     href="/login"
-                    className="text-base font-semibold leading-6 text-zinc-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                    className="text-sm sm:text-base font-semibold leading-6 text-zinc-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
                   >
                     {t('login')} <span aria-hidden="true">→</span>
                   </Link>
@@ -132,32 +134,32 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="mt-24">
-            <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-              <div className="rounded-lg bg-white dark:bg-zinc-900 p-6 shadow-sm border border-zinc-200 dark:border-zinc-800">
-                <div className="text-3xl mb-4">🎉</div>
-                <h3 className="text-lg font-semibold text-black dark:text-white mb-2">
+          <div className="mt-12 sm:mt-16 md:mt-24">
+            <div className="grid grid-cols-1 gap-4 sm:gap-6 md:gap-8 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="rounded-lg bg-white dark:bg-zinc-900 p-4 sm:p-6 shadow-sm border border-zinc-200 dark:border-zinc-800">
+                <div className="text-2xl sm:text-3xl mb-3 sm:mb-4">🎉</div>
+                <h3 className="text-base sm:text-lg font-semibold text-black dark:text-white mb-2">
                   {t('discoverEventsTitle')}
                 </h3>
-                <p className="text-zinc-600 dark:text-zinc-400">
+                <p className="text-sm sm:text-base text-zinc-600 dark:text-zinc-400">
                   {t('exploreDescription')}
                 </p>
               </div>
-              <div className="rounded-lg bg-white dark:bg-zinc-900 p-6 shadow-sm border border-zinc-200 dark:border-zinc-800">
-                <div className="text-3xl mb-4">📍</div>
-                <h3 className="text-lg font-semibold text-black dark:text-white mb-2">
+              <div className="rounded-lg bg-white dark:bg-zinc-900 p-4 sm:p-6 shadow-sm border border-zinc-200 dark:border-zinc-800">
+                <div className="text-2xl sm:text-3xl mb-3 sm:mb-4">📍</div>
+                <h3 className="text-base sm:text-lg font-semibold text-black dark:text-white mb-2">
                   {t('localFocus')}
                 </h3>
-                <p className="text-zinc-600 dark:text-zinc-400">
+                <p className="text-sm sm:text-base text-zinc-600 dark:text-zinc-400">
                   {t('exploreDescription')}
                 </p>
               </div>
-              <div className="rounded-lg bg-white dark:bg-zinc-900 p-6 shadow-sm border border-zinc-200 dark:border-zinc-800">
-                <div className="text-3xl mb-4">💾</div>
-                <h3 className="text-lg font-semibold text-black dark:text-white mb-2">
+              <div className="rounded-lg bg-white dark:bg-zinc-900 p-4 sm:p-6 shadow-sm border border-zinc-200 dark:border-zinc-800">
+                <div className="text-2xl sm:text-3xl mb-3 sm:mb-4">💾</div>
+                <h3 className="text-base sm:text-lg font-semibold text-black dark:text-white mb-2">
                   {t('saveFavorites')}
                 </h3>
-                <p className="text-zinc-600 dark:text-zinc-400">
+                <p className="text-sm sm:text-base text-zinc-600 dark:text-zinc-400">
                   Save events you're interested in and never miss out on what
                   matters to you.
                 </p>
@@ -167,9 +169,9 @@ export default function Home() {
         </div>
       </main>
 
-      <footer className="border-t border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
-          <p className="text-center text-sm text-zinc-600 dark:text-zinc-400">
+      <footer className="border-t border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 mt-auto">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+          <p className="text-center text-xs sm:text-sm text-zinc-600 dark:text-zinc-400">
             {t('copyright')} {new Date().getFullYear()} {t('cityPulse')}. {t('allRightsReserved')}.
           </p>
         </div>

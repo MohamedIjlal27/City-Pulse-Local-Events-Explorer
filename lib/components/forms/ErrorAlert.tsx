@@ -10,7 +10,7 @@ export function ErrorAlert({ message, className = '' }: ErrorAlertProps) {
 
   return (
     <div
-      className={`p-3 bg-red-100 dark:bg-red-900/30 border border-red-400 dark:border-red-800 text-red-700 dark:text-red-400 rounded ${className}`}
+      className={`p-3 bg-red-100 dark:bg-red-900/30 border border-red-400 dark:border-red-800 text-red-700 dark:text-red-400 rounded text-sm sm:text-base ${className}`}
     >
       {message}
     </div>

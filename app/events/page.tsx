@@ -31,9 +31,9 @@ export default function EventsPage() {
     <div className="min-h-screen bg-zinc-50 dark:bg-black">
       <AppHeader />
 
-      <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-black dark:text-white mb-6">
+      <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
+        <div className="mb-6 sm:mb-8">
+          <h1 className="text-2xl sm:text-3xl font-bold text-black dark:text-white mb-4 sm:mb-6">
             {t('browseEvents')}
           </h1>
 
@@ -83,12 +83,12 @@ export default function EventsPage() {
 
         {events.length > 0 ? (
           <div>
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold text-black dark:text-white">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 sm:mb-6 gap-2">
+              <h2 className="text-xl sm:text-2xl font-bold text-black dark:text-white">
                 {t('searchResults')}
               </h2>
               {pagination && (
-                <p className="text-sm text-zinc-600 dark:text-zinc-400">
+                <p className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-400">
                   {t('showing')} {pagination.currentPage * pagination.pageSize + 1} - {Math.min((pagination.currentPage + 1) * pagination.pageSize, pagination.totalElements)} {t('of')} {pagination.totalElements} {t('events')}
                 </p>
               )}
@@ -270,20 +270,21 @@ function PaginationControls({ pagination, onPageChange, onNext, onPrev, loading,
   };
 
   return (
-    <div className="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-      <div className="flex items-center gap-2">
+    <div className="mt-8 flex flex-col items-center justify-center gap-4">
+      <div className="flex items-center gap-1 sm:gap-2 w-full justify-center overflow-x-auto pb-2">
         <button
           onClick={onPrev}
           disabled={pagination.currentPage === 0 || loading}
-          className="px-4 py-2 rounded-lg bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 font-medium hover:bg-zinc-200 dark:hover:bg-zinc-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          className="px-3 sm:px-4 py-2 rounded-lg bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 font-medium text-xs sm:text-sm hover:bg-zinc-200 dark:hover:bg-zinc-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex-shrink-0"
         >
-          {t('previous')}
+          <span className="hidden sm:inline">{t('previous')}</span>
+          <span className="sm:hidden">←</span>
         </button>
         <div className="flex items-center gap-1">
           {getPageNumbers().map((page, idx) => {
             if (page === 'ellipsis') {
               return (
-                <span key={`ellipsis-${idx}`} className="px-2 text-zinc-500 dark:text-zinc-400">
+                <span key={`ellipsis-${idx}`} className="px-1 sm:px-2 text-zinc-500 dark:text-zinc-400 text-xs sm:text-sm">
                   ...
                 </span>
               );
@@ -295,7 +296,7 @@ function PaginationControls({ pagination, onPageChange, onNext, onPrev, loading,
                 key={pageNum}
                 onClick={() => onPageChange(pageNum)}
                 disabled={loading}
-                className={`px-3 py-2 rounded-lg font-medium transition-colors ${
+                className={`px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg font-medium text-xs sm:text-sm transition-colors ${
                   isActive
                     ? 'bg-blue-600 text-white'
                     : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-zinc-700'
@@ -309,12 +310,13 @@ function PaginationControls({ pagination, onPageChange, onNext, onPrev, loading,
         <button
           onClick={onNext}
           disabled={pagination.currentPage >= pagination.totalPages - 1 || loading}
-          className="px-4 py-2 rounded-lg bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 font-medium hover:bg-zinc-200 dark:hover:bg-zinc-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          className="px-3 sm:px-4 py-2 rounded-lg bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 font-medium text-xs sm:text-sm hover:bg-zinc-200 dark:hover:bg-zinc-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex-shrink-0"
         >
-          {t('next')}
+          <span className="hidden sm:inline">{t('next')}</span>
+          <span className="sm:hidden">→</span>
         </button>
       </div>
-      <p className="text-sm text-zinc-600 dark:text-zinc-400">
+      <p className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-400">
         {t('page')} {pagination.currentPage + 1} {t('of')} {pagination.totalPages}
       </p>
     </div>
