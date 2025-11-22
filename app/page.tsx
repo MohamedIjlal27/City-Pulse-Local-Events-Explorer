@@ -5,7 +5,6 @@ import Link from 'next/link';
 
 export default function Home() {
   const { user, loading, isAuthenticated } = useAuth();
-  const router = useRouter();
 
   if (loading) {
     return (
