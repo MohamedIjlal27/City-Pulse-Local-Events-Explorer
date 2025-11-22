@@ -36,21 +36,23 @@ export default function ProfilePage() {
 
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-black">
-      <header className="border-b border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900">
+      <header className="border-b border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 sticky top-0 z-10">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between">
             <Link
               href="/"
-              className="text-sm font-medium text-zinc-700 hover:text-zinc-900 dark:text-zinc-300 dark:hover:text-white"
+              className="text-xl font-bold text-black dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
             >
-              ← {t('home')}
+              {t('cityPulse')}
             </Link>
-            <button
-              onClick={toggleLanguage}
-              className="px-4 py-2 rounded-lg bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 text-sm font-medium hover:bg-zinc-200 dark:hover:bg-zinc-700"
-            >
-              {language === 'en' ? 'العربية' : 'English'}
-            </button>
+            <div className="flex items-center gap-4">
+              <button
+                onClick={toggleLanguage}
+                className="px-3 py-1.5 rounded-lg bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 text-sm font-medium hover:bg-zinc-200 dark:hover:bg-zinc-700"
+              >
+                {language === 'en' ? 'العربية' : 'English'}
+              </button>
+            </div>
           </div>
         </div>
       </header>
@@ -151,27 +153,37 @@ function EventCard({ event }: { event: LocalEvent }) {
 
   return (
     <Link href={`/events/${event.id}`}>
-      <div className="rounded-lg bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 overflow-hidden hover:shadow-md transition-shadow cursor-pointer">
-        {event.imageUrl && (
-          <img
-            src={event.imageUrl}
-            alt={event.title}
-            className="w-full h-48 object-cover"
-          />
-        )}
-        <div className="p-4">
-          <h3 className="text-lg font-semibold text-black dark:text-white mb-2 line-clamp-2">
+      <div className="h-full flex flex-col rounded-lg bg-white dark:bg-zinc-900 shadow-sm border border-zinc-200 dark:border-zinc-800 overflow-hidden hover:shadow-md transition-shadow cursor-pointer">
+        <div className="w-full h-48 bg-zinc-200 dark:bg-zinc-800 flex-shrink-0">
+          {event.imageUrl ? (
+            <img
+              src={event.imageUrl}
+              alt={event.title}
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center text-zinc-400 dark:text-zinc-600">
+              <span className="text-4xl">📅</span>
+            </div>
+          )}
+        </div>
+        <div className="p-4 flex-1 flex flex-col">
+          <h3 className="text-lg font-semibold text-black dark:text-white mb-2 line-clamp-2 flex-1">
             {event.title}
           </h3>
-          <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-2">
-            {formatDateShort(event.date)} {event.time && `${t('at')} ${event.time}`}
-          </p>
-          <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-2">
-            📍 {event.location}
-          </p>
-          <span className="inline-block px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 text-xs rounded">
-            {event.category}
-          </span>
+          <div className="space-y-2 text-sm flex-1">
+            <p className="text-zinc-600 dark:text-zinc-400">
+              {formatDateShort(event.date)} {event.time && `${t('at')} ${event.time}`}
+            </p>
+            <p className="text-zinc-600 dark:text-zinc-400 truncate">
+              📍 {event.location}
+            </p>
+          </div>
+          <div className="mt-3 flex-shrink-0">
+            <span className="inline-block px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 text-xs rounded">
+              {event.category}
+            </span>
+          </div>
         </div>
       </div>
     </Link>
