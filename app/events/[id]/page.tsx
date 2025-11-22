@@ -78,7 +78,7 @@ function EventDetailContent() {
         <div className="max-w-2xl mx-auto">
           <ErrorAlert message={error || t('eventNotFound')} />
           <Link
-            href="/"
+            href="/home"
             className="mt-4 inline-block text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
           >
             ← {t('home')}
