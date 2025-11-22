@@ -31,7 +31,8 @@ export function useFavorites() {
   };
 
   const toggleFavorite = (event: LocalEvent) => {
-    if (isEventSaved(event.id)) {
+    const isCurrentlyFavorite = favorites.some((e) => e.id === event.id);
+    if (isCurrentlyFavorite) {
       removeFavorite(event.id);
       return false;
     } else {
@@ -41,7 +42,7 @@ export function useFavorites() {
   };
 
   const checkIsFavorite = (eventId: string): boolean => {
-    return isEventSaved(eventId);
+    return favorites.some((e) => e.id === eventId);
   };
 
   return {

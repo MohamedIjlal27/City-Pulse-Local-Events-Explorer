@@ -12,9 +12,9 @@ import { LocalEvent } from '@/lib/types';
 export default function Home() {
   const { user, loading, isAuthenticated } = useAuth();
   const { events, loading: searchLoading, error: searchError, search } = useEventSearch();
-  const { toggleFavorite, checkIsFavorite } = useFavorites();
+  const { favorites, toggleFavorite, checkIsFavorite } = useFavorites();
   const { cities, loading: citiesLoading } = useCities();
-  const { language, toggleLanguage, t, formatDateShort } = useLanguage();
+  const { language, toggleLanguage, t, formatDateShort, mounted } = useLanguage();
   const [searchKeyword, setSearchKeyword] = useState('');
   const [searchCity, setSearchCity] = useState('');
 
@@ -44,12 +44,14 @@ export default function Home() {
               </span>
             </div>
             <nav className="flex items-center gap-4">
-              <button
-                onClick={toggleLanguage}
-                className="px-3 py-1.5 rounded-lg bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 text-sm font-medium hover:bg-zinc-200 dark:hover:bg-zinc-700"
-              >
-                {language === 'en' ? 'العربية' : 'English'}
-              </button>
+              {mounted && (
+                <button
+                  onClick={toggleLanguage}
+                  className="px-3 py-1.5 rounded-lg bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 text-sm font-medium hover:bg-zinc-200 dark:hover:bg-zinc-700"
+                >
+                  {language === 'en' ? 'العربية' : 'English'}
+                </button>
+              )}
               {isAuthenticated ? (
                 <>
                   <Link
@@ -146,7 +148,7 @@ export default function Home() {
                 </h3>
                 <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                   {events.map((event) => (
-                    <EventCard key={event.id} event={event} toggleFavorite={toggleFavorite} checkIsFavorite={checkIsFavorite} t={t} formatDateShort={formatDateShort} />
+                    <EventCard key={event.id} event={event} toggleFavorite={toggleFavorite} checkIsFavorite={checkIsFavorite} isFavorite={checkIsFavorite(event.id)} t={t} formatDateShort={formatDateShort} />
                   ))}
                 </div>
               </div>
@@ -231,16 +233,17 @@ function EventCard({
   event, 
   toggleFavorite, 
   checkIsFavorite, 
+  isFavorite,
   t,
   formatDateShort
 }: { 
   event: LocalEvent;
   toggleFavorite: (event: LocalEvent) => boolean;
   checkIsFavorite: (eventId: string) => boolean;
+  isFavorite: boolean;
   t: (key: keyof typeof translations.en) => string;
   formatDateShort: (date: string) => string;
 }) {
-  const isFav = checkIsFavorite(event.id);
 
   const handleFavoriteClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -261,9 +264,9 @@ function EventCard({
         <button
           onClick={handleFavoriteClick}
           className="absolute top-2 right-2 p-2 bg-white/90 dark:bg-zinc-900/90 rounded-full hover:bg-white dark:hover:bg-zinc-800 transition-colors"
-          aria-label={isFav ? t('unfavorite') : t('favorite')}
+          aria-label={isFavorite ? t('unfavorite') : t('favorite')}
         >
-          {isFav ? '❤️' : '🤍'}
+          {isFavorite ? '❤️' : '🤍'}
         </button>
         <div className="p-4">
           <div className="flex items-start justify-between mb-2">
