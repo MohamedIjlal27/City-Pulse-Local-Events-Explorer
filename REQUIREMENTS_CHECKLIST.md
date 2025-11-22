@@ -94,7 +94,11 @@
 - ✅ Error handling and validation
 
 ### 2. Map preview in event details
-- ❌ NOT IMPLEMENTED (Bonus feature)
+- ✅ Interactive map using Leaflet library
+- ✅ Shows event location with marker
+- ✅ Coordinates extracted from Ticketmaster API
+- ✅ OpenStreetMap tiles (no API key required)
+- ✅ Map displayed on event detail page when coordinates available
 
 ### 3. Bio-metric login
 - ❌ NOT IMPLEMENTED (Bonus feature)
@@ -103,6 +107,6 @@
 
 **Core Requirements**: 6/6 ✅ (100%)
 **Expectations**: 4/4 ✅ (100%)
-**Bonus Features**: 1/3 ✅ (33%)
+**Bonus Features**: 2/3 ✅ (67%)
 
 **Overall Completion**: All required features complete!

@@ -34,7 +34,7 @@ A modern React/Next.js application for discovering and exploring local events us
 ### ⭐ Bonus Features
 
 - [x] **Login & Sign Up pages**: Firebase authentication implemented
-- [ ] **Map preview in event details**: Not implemented
+- [x] **Map preview in event details**: Interactive map with Leaflet showing event location
 - [ ] **Bio-metric login**: Not implemented
 
 ## 🛠️ Setup Instructions
@@ -180,9 +180,16 @@ Implemented authentication methods:
 - **Firebase** - Authentication
 - **Ticketmaster Discovery API** - Event data
 
+## 🗺️ Map Preview
+
+The event detail page includes an interactive map preview when coordinates are available:
+- Uses Leaflet library with OpenStreetMap tiles
+- Shows event location with a marker
+- Clickable marker with event title popup
+- No API key required (uses free OpenStreetMap tiles)
+
 ## 🐛 Known Issues
 
-- Map preview in event details not implemented (bonus feature)
 - Biometric login not implemented (bonus feature)
 
 ## 📝 License
