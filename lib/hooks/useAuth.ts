@@ -6,8 +6,18 @@ import { auth } from '@/lib/config/firebase';
 import { AuthUser } from '@/lib/types';
 import { getStorageItem, setStorageItem, removeStorageItem } from '@/lib/utils/storage';
 import { STORAGE_KEYS } from '@/lib/types';
-import { registerUser, loginUser, logoutUser } from '@/lib/services/authService';
-import { RegisterData, LoginData } from '@/lib/types';
+import {
+  registerUser,
+  loginUser,
+  logoutUser,
+  sendEmailSignInLink,
+  signInWithEmailLinkComplete,
+  checkIsSignInWithEmailLink,
+  getStoredEmailForSignIn,
+  signInWithGoogle,
+} from '@/lib/services/authService';
+import { RegisterData, LoginData, EmailLinkActionCodeSettings } from '@/lib/types';
+import { ActionCodeSettings } from 'firebase/auth';
 
 /**
  * Convert Firebase User to AuthUser
@@ -113,6 +123,70 @@ export function useAuth() {
     return { success: true };
   };
 
+  const sendEmailLink = async (
+    email: string,
+    actionCodeSettings: EmailLinkActionCodeSettings
+  ) => {
+    setError(null);
+    setLoading(true);
+    
+    const settings: ActionCodeSettings = {
+      url: actionCodeSettings.url,
+      handleCodeInApp: actionCodeSettings.handleCodeInApp,
+      ...(actionCodeSettings.iOS && { iOS: actionCodeSettings.iOS }),
+      ...(actionCodeSettings.android && { android: actionCodeSettings.android }),
+      ...(actionCodeSettings.linkDomain && { linkDomain: actionCodeSettings.linkDomain }),
+    };
+    
+    const result = await sendEmailSignInLink(email, settings);
+    setLoading(false);
+    
+    if (!result.success) {
+      setError(result.error || 'Failed to send email link');
+      return { success: false, error: result.error };
+    }
+    
+    return { success: true };
+  };
+
+  const completeEmailLinkSignIn = async (email: string, emailLink: string) => {
+    setError(null);
+    setLoading(true);
+    const result = await signInWithEmailLinkComplete(email, emailLink);
+    setLoading(false);
+    
+    if (result.error) {
+      setError(result.error);
+      return { success: false, error: result.error };
+    }
+    
+    setUser(result.user);
+    return { success: true, user: result.user };
+  };
+
+  const isEmailLink = (url: string) => {
+    return checkIsSignInWithEmailLink(url);
+  };
+
+  const getStoredEmail = () => {
+    return getStoredEmailForSignIn();
+  };
+
+  const signInWithGoogleAuth = async () => {
+    setError(null);
+    setLoading(true);
+    const result = await signInWithGoogle();
+    setLoading(false);
+    
+    if (result.error) {
+      setError(result.error);
+      return { success: false, error: result.error };
+    }
+    
+    setUser(result.user);
+    return { success: true, user: result.user };
+  };
+
   return {
     user,
     loading,
@@ -120,6 +194,11 @@ export function useAuth() {
     register,
     login,
     logout,
+    sendEmailLink,
+    completeEmailLinkSignIn,
+    isEmailLink,
+    getStoredEmail,
+    signInWithGoogle: signInWithGoogleAuth,
     isAuthenticated: !!user,
   };
 }

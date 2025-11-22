@@ -59,6 +59,20 @@ export interface LoginData {
   password: string;
 }
 
+export interface EmailLinkActionCodeSettings {
+  url: string;
+  handleCodeInApp: boolean;
+  iOS?: {
+    bundleId: string;
+  };
+  android?: {
+    packageName: string;
+    installApp?: boolean;
+    minimumVersion?: string;
+  };
+  linkDomain?: string;
+}
+
 // Storage keys type for type safety
 export const STORAGE_KEYS = {
   USER_PREFERENCES: 'user_preferences',
