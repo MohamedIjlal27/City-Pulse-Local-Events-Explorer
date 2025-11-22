@@ -132,6 +132,7 @@ export const searchEventsFromAPI = async (
   try {
     const params = new URLSearchParams({
       apikey: apiKey,
+      locale: '*',
       keyword: keyword,
       size: size.toString(),
       sort: 'date,asc',
@@ -142,7 +143,7 @@ export const searchEventsFromAPI = async (
     }
 
     const response = await fetch(
-      `https://app.ticketmaster.com/discovery/v2/events.json?${params.toString()}`
+      `https://app.ticketmaster.com/discovery/v2/events?${params.toString()}`
     );
 
     if (!response.ok) {
@@ -195,8 +196,13 @@ export const getEventByIdFromAPI = async (
   }
 
   try {
+    const params = new URLSearchParams({
+      apikey: apiKey,
+      locale: '*',
+    });
+
     const response = await fetch(
-      `https://app.ticketmaster.com/discovery/v2/events/${eventId}.json?apikey=${apiKey}`
+      `https://app.ticketmaster.com/discovery/v2/events/${eventId}?${params.toString()}`
     );
 
     if (!response.ok) {
