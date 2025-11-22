@@ -52,7 +52,7 @@ A modern React/Next.js application for discovering and exploring local events us
 
 1. Clone the repository
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/MohamedIjlal27/City-Pulse-Local-Events-Explorer.git
    cd city-pulse-local-events-explorer
    ```
 
