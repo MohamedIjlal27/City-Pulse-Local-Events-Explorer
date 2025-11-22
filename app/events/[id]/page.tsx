@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { useFavorites } from '@/lib/hooks/useFavorites';
 import { useLanguage } from '@/lib/utils/i18n';
-import { UserProfileLink } from '@/lib/components/navigation';
+import { AppHeader } from '@/lib/components/navigation';
 import { getEventByIdFromAPI } from '@/lib/services/eventService';
 import { LocalEvent } from '@/lib/types';
 import { ErrorAlert } from '@/lib/components/forms';
@@ -14,7 +14,7 @@ import { ErrorAlert } from '@/lib/components/forms';
 function EventDetailContent() {
   const params = useParams();
   const router = useRouter();
-  const { user, isAuthenticated } = useAuth();
+  const { isAuthenticated } = useAuth();
   const { toggleFavorite, checkIsFavorite } = useFavorites();
   const { t, isRTL, formatDate } = useLanguage();
   const [event, setEvent] = useState<LocalEvent | null>(null);
@@ -89,33 +89,32 @@ function EventDetailContent() {
 
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-black">
-      <header className="border-b border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 sticky top-0 z-10">
+      <AppHeader />
+      <div className="border-b border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex h-16 items-center justify-between">
+          <div className="flex h-12 items-center justify-between">
             <Link
-              href="/"
-              className="text-sm font-medium text-zinc-700 hover:text-zinc-900 dark:text-zinc-300 dark:hover:text-white"
+              href="/events"
+              className="text-sm font-medium text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white transition-colors flex items-center gap-2"
             >
-              ← {t('home')}
+              <span>←</span>
+              <span>{t('events')}</span>
             </Link>
-            <div className="flex items-center gap-4">
-              {isAuthenticated && (
-                <button
-                  onClick={handleToggleFavorite}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                    isFav
-                      ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
-                      : 'bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300'
-                  }`}
-                >
-                  {isFav ? '❤️ ' + t('unfavorite') : '🤍 ' + t('favorite')}
-                </button>
-              )}
-              {user && <UserProfileLink user={user} />}
-            </div>
+            {isAuthenticated && (
+              <button
+                onClick={handleToggleFavorite}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  isFav
+                    ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
+                    : 'bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300'
+                }`}
+              >
+                {isFav ? '❤️ ' + t('unfavorite') : '🤍 ' + t('favorite')}
+              </button>
+            )}
           </div>
         </div>
-      </header>
+      </div>
 
       <main className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-8">
         {event.imageUrl && (

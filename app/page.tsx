@@ -6,7 +6,7 @@ import { useEventSearch } from '@/lib/hooks/useEventSearch';
 import { useFavorites } from '@/lib/hooks/useFavorites';
 import { useCities } from '@/lib/hooks/useCities';
 import { useLanguage, translations } from '@/lib/utils/i18n';
-import { UserProfileLink } from '@/lib/components/navigation';
+import { AppHeader } from '@/lib/components/navigation';
 import Link from 'next/link';
 import { LocalEvent } from '@/lib/types';
 
@@ -15,7 +15,7 @@ export default function Home() {
   const { events, loading: searchLoading, error: searchError, search } = useEventSearch();
   const { favorites, toggleFavorite, checkIsFavorite } = useFavorites();
   const { cities, loading: citiesLoading } = useCities();
-  const { language, toggleLanguage, t, formatDateShort, mounted } = useLanguage();
+  const { t, formatDateShort } = useLanguage();
   const [searchKeyword, setSearchKeyword] = useState('');
   const [searchCity, setSearchCity] = useState('');
 
@@ -32,51 +32,7 @@ export default function Home() {
 
   return (
     <div className="flex min-h-screen flex-col bg-zinc-50 dark:bg-black">
-      {/* Header */}
-      <header className="border-b border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex h-16 items-center justify-between">
-            <div className="flex items-center">
-              <h1 className="text-xl font-bold text-black dark:text-white">
-                {t('cityPulse')}
-              </h1>
-              <span className="ml-2 text-sm text-zinc-600 dark:text-zinc-400">
-                {t('localEventsExplorer')}
-              </span>
-            </div>
-            <nav className="flex items-center gap-4">
-              {mounted && (
-                <button
-                  onClick={toggleLanguage}
-                  className="px-3 py-1.5 rounded-lg bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 text-sm font-medium hover:bg-zinc-200 dark:hover:bg-zinc-700"
-                >
-                  {language === 'en' ? 'العربية' : 'English'}
-                </button>
-              )}
-              {isAuthenticated && user ? (
-                <>
-                  <UserProfileLink user={user} />
-                </>
-              ) : (
-                <>
-                  <Link
-                    href="/login"
-                    className="text-sm font-medium text-zinc-700 hover:text-zinc-900 dark:text-zinc-300 dark:hover:text-white transition-colors"
-                  >
-                    {t('login')}
-                  </Link>
-                  <Link
-                    href="/register"
-                    className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 transition-colors"
-                  >
-                    {t('register')}
-                  </Link>
-                </>
-              )}
-            </nav>
-          </div>
-        </div>
-      </header>
+      <AppHeader />
 
       {/* Hero Section */}
       <main className="flex-1">

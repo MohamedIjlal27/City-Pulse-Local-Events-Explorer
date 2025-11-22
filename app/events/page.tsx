@@ -6,16 +6,16 @@ import { useEventSearch } from '@/lib/hooks/useEventSearch';
 import { useFavorites } from '@/lib/hooks/useFavorites';
 import { useCities } from '@/lib/hooks/useCities';
 import { useLanguage, translations } from '@/lib/utils/i18n';
-import { UserProfileLink } from '@/lib/components/navigation';
+import { AppHeader } from '@/lib/components/navigation';
 import Link from 'next/link';
 import { LocalEvent } from '@/lib/types';
 
 export default function EventsPage() {
-  const { user, isAuthenticated } = useAuth();
+  const { isAuthenticated } = useAuth();
   const { events, loading: searchLoading, error: searchError, pagination, search, goToPage, nextPage, prevPage } = useEventSearch();
   const { favorites, toggleFavorite, checkIsFavorite } = useFavorites();
   const { cities, loading: citiesLoading } = useCities();
-  const { language, toggleLanguage, t, formatDateShort, mounted } = useLanguage();
+  const { t, formatDateShort } = useLanguage();
   const [searchKeyword, setSearchKeyword] = useState('');
   const [searchCity, setSearchCity] = useState('');
   const [hasSearched, setHasSearched] = useState(false);
@@ -29,31 +29,7 @@ export default function EventsPage() {
 
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-black">
-      <header className="border-b border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 sticky top-0 z-10">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex h-16 items-center justify-between">
-            <Link
-              href="/"
-              className="text-xl font-bold text-black dark:text-white"
-            >
-              {t('cityPulse')}
-            </Link>
-            <nav className="flex items-center gap-4">
-              {mounted && (
-                <button
-                  onClick={toggleLanguage}
-                  className="px-3 py-1.5 rounded-lg bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 text-sm font-medium hover:bg-zinc-200 dark:hover:bg-zinc-700"
-                >
-                  {language === 'en' ? 'العربية' : 'English'}
-                </button>
-              )}
-              {isAuthenticated && user && (
-                <UserProfileLink user={user} />
-              )}
-            </nav>
-          </div>
-        </div>
-      </header>
+      <AppHeader />
 
       <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">

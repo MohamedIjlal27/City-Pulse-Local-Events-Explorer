@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { useFavorites } from '@/lib/hooks/useFavorites';
 import { useLanguage } from '@/lib/utils/i18n';
+import { AppHeader } from '@/lib/components/navigation';
 import { ErrorAlert } from '@/lib/components/forms';
 import { LocalEvent } from '@/lib/types';
 
@@ -12,7 +13,7 @@ export default function ProfilePage() {
   const router = useRouter();
   const { user, logout, isAuthenticated, loading } = useAuth();
   const { favorites, loading: favoritesLoading } = useFavorites();
-  const { language, toggleLanguage, t, isRTL } = useLanguage();
+  const { language, t, isRTL } = useLanguage();
 
   if (loading) {
     return (
@@ -36,26 +37,7 @@ export default function ProfilePage() {
 
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-black">
-      <header className="border-b border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 sticky top-0 z-10">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex h-16 items-center justify-between">
-            <Link
-              href="/"
-              className="text-xl font-bold text-black dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-            >
-              {t('cityPulse')}
-            </Link>
-            <div className="flex items-center gap-4">
-              <button
-                onClick={toggleLanguage}
-                className="px-3 py-1.5 rounded-lg bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 text-sm font-medium hover:bg-zinc-200 dark:hover:bg-zinc-700"
-              >
-                {language === 'en' ? 'العربية' : 'English'}
-              </button>
-            </div>
-          </div>
-        </div>
-      </header>
+      <AppHeader />
 
       <main className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-8">
         <div className="bg-white dark:bg-zinc-900 rounded-lg shadow-lg p-8 mb-6">
