@@ -142,23 +142,21 @@ function EventDetailContent() {
               </div>
             </div>
 
-            <div className="flex items-center gap-2 text-zinc-600 dark:text-zinc-400">
-              <span className="text-2xl">📍</span>
-              <p>{event.location}</p>
-            </div>
-
-            {event.latitude && event.longitude && (
-              <div className="mt-6">
-                <h3 className="text-lg font-semibold text-black dark:text-white mb-3">
-                  📍 {event.location}
-                </h3>
-                <MapPreview
-                  latitude={event.latitude}
-                  longitude={event.longitude}
-                  title={event.title}
-                />
+            <div className="space-y-2">
+              <div className="flex items-center gap-2 text-zinc-600 dark:text-zinc-400">
+                <span className="text-2xl">📍</span>
+                <p className="font-medium">{event.location}</p>
               </div>
-            )}
+              {event.latitude && event.longitude && (
+                <div className="mt-4">
+                  <MapPreview
+                    latitude={event.latitude}
+                    longitude={event.longitude}
+                    title={event.title}
+                  />
+                </div>
+              )}
+            </div>
 
             {event.price && (
               <div className="flex items-center gap-2 text-zinc-600 dark:text-zinc-400">
