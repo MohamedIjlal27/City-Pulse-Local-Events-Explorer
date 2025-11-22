@@ -4,10 +4,12 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/lib/hooks/useAuth';
+import { useLanguage } from '@/lib/utils/i18n';
 
 export default function EmailLinkLoginPage() {
   const router = useRouter();
   const { sendEmailLink, loading, error } = useAuth();
+  const { t } = useLanguage();
   const [email, setEmail] = useState('');
   const [emailSent, setEmailSent] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
@@ -17,7 +19,7 @@ export default function EmailLinkLoginPage() {
     setFormError(null);
 
     if (!email) {
-      setFormError('Please enter your email address');
+      setFormError(t('pleaseEnterEmail'));
       return;
     }
 
@@ -32,7 +34,7 @@ export default function EmailLinkLoginPage() {
     if (result.success) {
       setEmailSent(true);
     } else {
-      setFormError(result.error || 'Failed to send email link');
+      setFormError(result.error || t('failedToSendEmailLink'));
     }
   };
 
@@ -43,13 +45,13 @@ export default function EmailLinkLoginPage() {
           <div className="bg-white dark:bg-zinc-900 rounded-lg shadow-lg p-8 text-center">
             <div className="text-4xl mb-4">✉️</div>
             <h1 className="text-2xl font-bold mb-4 text-black dark:text-white">
-              Check Your Email
+              {t('checkYourEmail')}
             </h1>
             <p className="text-zinc-600 dark:text-zinc-400 mb-6">
-              We've sent a sign-in link to <strong>{email}</strong>
+              {t('emailSentTo')} <strong>{email}</strong>
             </p>
             <p className="text-sm text-zinc-500 dark:text-zinc-400 mb-8">
-              Click the link in the email to sign in. The link will expire in a few minutes.
+              {t('clickLinkInEmail')}
             </p>
             <button
               onClick={() => {
@@ -58,13 +60,13 @@ export default function EmailLinkLoginPage() {
               }}
               className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors mb-4"
             >
-              Send Another Email
+              {t('sendAnotherEmail')}
             </button>
             <Link
               href="/login"
               className="block text-center text-sm text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
             >
-              Back to Login
+              {t('backToLogin')}
             </Link>
           </div>
         </div>
@@ -77,10 +79,10 @@ export default function EmailLinkLoginPage() {
       <div className="w-full max-w-md">
         <div className="bg-white dark:bg-zinc-900 rounded-lg shadow-lg p-8">
           <h1 className="text-3xl font-bold text-center mb-2 text-black dark:text-white">
-            Sign In with Email Link
+            {t('signInWithEmailLinkTitle')}
           </h1>
           <p className="text-center text-zinc-600 dark:text-zinc-400 mb-8">
-            Enter your email and we'll send you a passwordless sign-in link
+            {t('enterEmailForLink')}
           </p>
 
           {(error || formError) && (
@@ -95,7 +97,7 @@ export default function EmailLinkLoginPage() {
                 htmlFor="email"
                 className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2"
               >
-                Email Address
+                {t('emailAddress')}
               </label>
               <input
                 id="email"
@@ -115,7 +117,7 @@ export default function EmailLinkLoginPage() {
               disabled={loading}
               className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-semibold py-3 px-4 rounded-lg transition-colors duration-200 disabled:cursor-not-allowed"
             >
-              {loading ? 'Sending...' : 'Send Sign-In Link'}
+              {loading ? t('sending') : t('sendSignInLink')}
             </button>
           </form>
 
@@ -125,7 +127,7 @@ export default function EmailLinkLoginPage() {
                 href="/login"
                 className="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 font-medium"
               >
-                Back to password login
+                {t('backToPasswordLogin')}
               </Link>
             </p>
           </div>

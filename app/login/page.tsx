@@ -4,11 +4,13 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/lib/hooks/useAuth';
+import { useLanguage } from '@/lib/utils/i18n';
 import { ErrorAlert, GoogleSignInButton, Divider } from '@/lib/components/forms';
 
 export default function LoginPage() {
   const router = useRouter();
   const { login, signInWithGoogle, loading, error } = useAuth();
+  const { t } = useLanguage();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -19,9 +21,8 @@ export default function LoginPage() {
     e.preventDefault();
     setFormError(null);
 
-    // Basic validation
     if (!formData.email || !formData.password) {
-      setFormError('Please fill in all fields');
+      setFormError(t('pleaseFillAllFields'));
       return;
     }
 
@@ -30,7 +31,7 @@ export default function LoginPage() {
     if (result.success) {
       router.push('/');
     } else {
-      setFormError(result.error || 'Login failed');
+      setFormError(result.error || t('loginFailed'));
     }
   };
 
@@ -48,7 +49,7 @@ export default function LoginPage() {
     if (result.success) {
       router.push('/');
     } else {
-      setFormError(result.error || 'Google sign-in failed');
+      setFormError(result.error || t('googleSignInFailed'));
     }
   };
 
@@ -57,10 +58,10 @@ export default function LoginPage() {
       <div className="w-full max-w-md">
         <div className="bg-white dark:bg-zinc-900 rounded-lg shadow-lg p-8">
           <h1 className="text-3xl font-bold text-center mb-2 text-black dark:text-white">
-            Welcome Back
+            {t('welcomeBack')}
           </h1>
           <p className="text-center text-zinc-600 dark:text-zinc-400 mb-8">
-            Sign in to your account
+            {t('signInToAccount')}
           </p>
 
           <ErrorAlert message={error || formError} className="mb-4" />
@@ -71,7 +72,7 @@ export default function LoginPage() {
                 htmlFor="email"
                 className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2"
               >
-                Email Address
+                {t('emailAddress')}
               </label>
               <input
                 id="email"
@@ -91,7 +92,7 @@ export default function LoginPage() {
                 htmlFor="password"
                 className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2"
               >
-                Password
+                {t('password')}
               </label>
               <input
                 id="password"
@@ -111,27 +112,27 @@ export default function LoginPage() {
               disabled={loading}
               className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-semibold py-3 px-4 rounded-lg transition-colors duration-200 disabled:cursor-not-allowed"
             >
-              {loading ? 'Signing in...' : 'Sign In'}
+              {loading ? t('signingIn') : t('signIn')}
             </button>
           </form>
 
           <div className="mt-6">
-            <Divider text="Or continue with" className="mb-6" />
+            <Divider text={t('orContinueWith')} className="mb-6" />
             <GoogleSignInButton
               onClick={handleGoogleSignIn}
               disabled={loading}
-              label="Sign in with Google"
+              label={t('signInWithGoogle')}
             />
           </div>
 
           <div className="mt-6 space-y-3 text-center">
             <p className="text-sm text-zinc-600 dark:text-zinc-400">
-              Don't have an account?{' '}
+              {t('dontHaveAccount')}{' '}
               <Link
                 href="/register"
                 className="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 font-medium"
               >
-                Sign up
+                {t('signUp')}
               </Link>
             </p>
             <div className="relative">
@@ -140,7 +141,7 @@ export default function LoginPage() {
               </div>
               <div className="relative flex justify-center text-sm">
                 <span className="px-2 bg-white dark:bg-zinc-900 text-zinc-500 dark:text-zinc-400">
-                  Or
+                  {t('or')}
                 </span>
               </div>
             </div>
@@ -148,7 +149,7 @@ export default function LoginPage() {
               href="/login/email-link"
               className="block text-sm text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 font-medium"
             >
-              Sign in with email link (passwordless)
+              {t('signInWithEmailLink')}
             </Link>
           </div>
         </div>

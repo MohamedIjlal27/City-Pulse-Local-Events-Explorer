@@ -4,12 +4,13 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/lib/hooks/useAuth';
+import { useLanguage } from '@/lib/utils/i18n';
 import { ErrorAlert, GoogleSignInButton, Divider } from '@/lib/components/forms';
-import { VALIDATION_MESSAGES } from '@/lib/constants/errors';
 
 export default function RegisterPage() {
   const router = useRouter();
   const { register, signInWithGoogle, loading, error } = useAuth();
+  const { t } = useLanguage();
   const [formData, setFormData] = useState({
     displayName: '',
     email: '',
@@ -22,19 +23,18 @@ export default function RegisterPage() {
     e.preventDefault();
     setFormError(null);
 
-    // Basic validation
     if (!formData.email || !formData.password || !formData.confirmPassword) {
-      setFormError(VALIDATION_MESSAGES.REQUIRED_FIELDS);
+      setFormError(t('pleaseFillRequiredFields'));
       return;
     }
 
     if (formData.password.length < 6) {
-      setFormError(VALIDATION_MESSAGES.PASSWORD_MIN_LENGTH);
+      setFormError(t('passwordMustBeSixChars'));
       return;
     }
 
     if (formData.password !== formData.confirmPassword) {
-      setFormError(VALIDATION_MESSAGES.PASSWORDS_DONT_MATCH);
+      setFormError(t('passwordsDontMatch'));
       return;
     }
 
@@ -47,7 +47,7 @@ export default function RegisterPage() {
     if (result.success) {
       router.push('/');
     } else {
-      setFormError(result.error || 'Registration failed');
+      setFormError(result.error || t('registrationFailed'));
     }
   };
 
@@ -65,7 +65,7 @@ export default function RegisterPage() {
     if (result.success) {
       router.push('/');
     } else {
-      setFormError(result.error || 'Google sign-in failed');
+      setFormError(result.error || t('googleSignInFailed'));
     }
   };
 
@@ -74,10 +74,10 @@ export default function RegisterPage() {
       <div className="w-full max-w-md">
         <div className="bg-white dark:bg-zinc-900 rounded-lg shadow-lg p-8">
           <h1 className="text-3xl font-bold text-center mb-2 text-black dark:text-white">
-            Create Account
+            {t('createAccount')}
           </h1>
           <p className="text-center text-zinc-600 dark:text-zinc-400 mb-8">
-            Sign up to get started
+            {t('signUpToGetStarted')}
           </p>
 
           <ErrorAlert message={error || formError} className="mb-4" />
@@ -88,7 +88,7 @@ export default function RegisterPage() {
                 htmlFor="displayName"
                 className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2"
               >
-                Display Name (Optional)
+                {t('displayName')}
               </label>
               <input
                 id="displayName"
@@ -107,7 +107,7 @@ export default function RegisterPage() {
                 htmlFor="email"
                 className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2"
               >
-                Email Address
+                {t('emailAddress')}
               </label>
               <input
                 id="email"
@@ -127,7 +127,7 @@ export default function RegisterPage() {
                 htmlFor="password"
                 className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2"
               >
-                Password
+                {t('password')}
               </label>
               <input
                 id="password"
@@ -141,7 +141,7 @@ export default function RegisterPage() {
                 placeholder="••••••••"
               />
               <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
-                Must be at least 6 characters
+                {t('passwordMinLength')}
               </p>
             </div>
 
@@ -150,7 +150,7 @@ export default function RegisterPage() {
                 htmlFor="confirmPassword"
                 className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-2"
               >
-                Confirm Password
+                {t('confirmPassword')}
               </label>
               <input
                 id="confirmPassword"
@@ -170,27 +170,27 @@ export default function RegisterPage() {
               disabled={loading}
               className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-semibold py-3 px-4 rounded-lg transition-colors duration-200 disabled:cursor-not-allowed"
             >
-              {loading ? 'Creating account...' : 'Create Account'}
+              {loading ? t('creatingAccount') : t('createAccount')}
             </button>
           </form>
 
           <div className="mt-6">
-            <Divider text="Or continue with" className="mb-6" />
+            <Divider text={t('orContinueWith')} className="mb-6" />
             <GoogleSignInButton
               onClick={handleGoogleSignIn}
               disabled={loading}
-              label="Sign up with Google"
+              label={t('signUpWithGoogle')}
             />
           </div>
 
           <div className="mt-6 text-center">
             <p className="text-sm text-zinc-600 dark:text-zinc-400">
-              Already have an account?{' '}
+              {t('alreadyHaveAccount')}{' '}
               <Link
                 href="/login"
                 className="text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 font-medium"
               >
-                Sign in
+                {t('signIn')}
               </Link>
             </p>
           </div>
