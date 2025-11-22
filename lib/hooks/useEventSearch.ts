@@ -37,7 +37,7 @@ export function useEventSearch() {
       addRecentSearch(searchQuery);
     }
 
-    const result = await searchEventsFromAPI(keyword, city, 10, page);
+    const result = await searchEventsFromAPI(keyword, city, 12, page);
 
     if (result.error) {
       setError(result.error);
