@@ -3,4 +3,5 @@ export { useUserPreferences } from './useUserPreferences';
 export { useAuth } from './useAuth';
 export { useEventSearch } from './useEventSearch';
 export { useFavorites } from './useFavorites';
+export { useCities } from './useCities';
 

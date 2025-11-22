@@ -2,10 +2,6 @@ import { LocalEvent } from '@/lib/types';
 import { getStorageItem, setStorageItem } from '@/lib/utils/storage';
 import { STORAGE_KEYS } from '@/lib/types';
 
-export const getTicketmasterLocale = (language: 'en' | 'ar'): string => {
-  return language === 'ar' ? 'ar-sa' : 'en-us';
-};
-
 interface TicketmasterEvent {
   id: string;
   name: string;
@@ -163,8 +159,7 @@ export const searchEventsFromAPI = async (
   keyword: string,
   city?: string,
   size: number = 20,
-  page: number = 0,
-  locale: string = 'en-us'
+  page: number = 0
 ): Promise<
   | { events: LocalEvent[]; pagination: { currentPage: number; totalPages: number; totalElements: number; pageSize: number }; error: null }
   | { events: []; pagination: null; error: string }
@@ -178,7 +173,7 @@ export const searchEventsFromAPI = async (
   try {
     const params = new URLSearchParams({
       apikey: apiKey,
-      locale: locale,
+      locale: '*',
       keyword: keyword,
       size: size.toString(),
       page: page.toString(),
@@ -256,8 +251,7 @@ export const searchEventsFromAPI = async (
 };
 
 export const getEventByIdFromAPI = async (
-  eventId: string,
-  locale: string = 'en-us'
+  eventId: string
 ): Promise<{ event: LocalEvent | null; error: null } | { event: null; error: string }> => {
   const apiKey = process.env.NEXT_PUBLIC_TICKETMASTER_API_KEY;
 
@@ -268,7 +262,7 @@ export const getEventByIdFromAPI = async (
   try {
     const params = new URLSearchParams({
       apikey: apiKey,
-      locale: locale,
+      locale: '*',
     });
 
     const response = await fetch(
@@ -368,5 +362,77 @@ export const searchEvents = (
       event.location.toLowerCase().includes(lowerQuery) ||
       event.tags?.some((tag) => tag.toLowerCase().includes(lowerQuery))
   );
+};
+
+export const getAvailableCities = async (): Promise<
+  | { cities: string[]; error: null }
+  | { cities: []; error: string }
+> => {
+  const apiKey = process.env.NEXT_PUBLIC_TICKETMASTER_API_KEY;
+
+  if (!apiKey) {
+    return { cities: [], error: 'Ticketmaster API key is not configured' };
+  }
+
+  try {
+    const params = new URLSearchParams({
+      apikey: apiKey,
+      locale: '*',
+      size: '200',
+      sort: 'date,asc',
+    });
+
+    const response = await fetch(
+      `https://app.ticketmaster.com/discovery/v2/events?${params.toString()}`
+    );
+
+    if (!response.ok) {
+      if (response.status === 429) {
+        return {
+          cities: [],
+          error: 'Rate limit exceeded. Please try again later.',
+        };
+      }
+
+      const errorData = await response.json().catch(() => ({}));
+      
+      if (errorData.fault?.faultstring) {
+        return {
+          cities: [],
+          error: errorData.fault.faultstring,
+        };
+      }
+
+      return {
+        cities: [],
+        error: errorData.error?.message || `API error: ${response.status}`,
+      };
+    }
+
+    const data: TicketmasterResponse = await response.json();
+
+    if (!data._embedded?.events) {
+      return { cities: [], error: null };
+    }
+
+    const citySet = new Set<string>();
+    
+    data._embedded.events.forEach((event) => {
+      event._embedded?.venues?.forEach((venue) => {
+        if (venue.city?.name) {
+          citySet.add(venue.city.name);
+        }
+      });
+    });
+
+    const cities = Array.from(citySet).sort();
+
+    return { cities, error: null };
+  } catch (error: any) {
+    return {
+      cities: [],
+      error: error.message || 'Failed to fetch cities',
+    };
+  }
 };
 

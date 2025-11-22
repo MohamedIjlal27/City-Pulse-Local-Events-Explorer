@@ -4,17 +4,17 @@ import { useState } from 'react';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { useEventSearch } from '@/lib/hooks/useEventSearch';
 import { useFavorites } from '@/lib/hooks/useFavorites';
+import { useCities } from '@/lib/hooks/useCities';
 import { useLanguage, translations } from '@/lib/utils/i18n';
-import { getTicketmasterLocale } from '@/lib/services/eventService';
 import Link from 'next/link';
 import { LocalEvent } from '@/lib/types';
 
 export default function Home() {
   const { user, loading, isAuthenticated } = useAuth();
-  const { language, toggleLanguage, t, formatDateShort } = useLanguage();
-  const locale = getTicketmasterLocale(language);
-  const { events, loading: searchLoading, error: searchError, search } = useEventSearch(locale);
+  const { events, loading: searchLoading, error: searchError, search } = useEventSearch();
   const { toggleFavorite, checkIsFavorite } = useFavorites();
+  const { cities, loading: citiesLoading } = useCities();
+  const { language, toggleLanguage, t, formatDateShort } = useLanguage();
   const [searchKeyword, setSearchKeyword] = useState('');
   const [searchCity, setSearchCity] = useState('');
 
@@ -110,13 +110,19 @@ export default function Home() {
                   placeholder={t('searchPlaceholder')}
                   className="flex-1 px-4 py-3 border border-zinc-300 dark:border-zinc-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-zinc-800 text-black dark:text-white"
                 />
-                <input
-                  type="text"
+                <select
                   value={searchCity}
                   onChange={(e) => setSearchCity(e.target.value)}
-                  placeholder={t('cityPlaceholder')}
                   className="w-full sm:w-48 px-4 py-3 border border-zinc-300 dark:border-zinc-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-zinc-800 text-black dark:text-white"
-                />
+                  disabled={citiesLoading}
+                >
+                  <option value="">{t('cityPlaceholder')}</option>
+                  {cities.map((city) => (
+                    <option key={city} value={city}>
+                      {city}
+                    </option>
+                  ))}
+                </select>
                 <button
                   type="submit"
                   disabled={searchLoading || !searchKeyword.trim()}
