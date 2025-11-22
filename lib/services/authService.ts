@@ -33,6 +33,10 @@ const mapFirebaseUser = (user: User): AuthUser => {
 export const registerUser = async (
   data: RegisterData
 ): Promise<{ user: AuthUser; error: null } | { user: null; error: string }> => {
+  if (!auth) {
+    return { user: null, error: 'Firebase is not configured. Please check your .env.local file.' };
+  }
+
   try {
     const userCredential: UserCredential = await createUserWithEmailAndPassword(
       auth,
@@ -65,6 +69,10 @@ export const registerUser = async (
 export const loginUser = async (
   data: LoginData
 ): Promise<{ user: AuthUser; error: null } | { user: null; error: string }> => {
+  if (!auth) {
+    return { user: null, error: 'Firebase is not configured. Please check your .env.local file.' };
+  }
+
   try {
     const userCredential: UserCredential = await signInWithEmailAndPassword(
       auth,
@@ -101,6 +109,12 @@ export const loginUser = async (
  * Logout user
  */
 export const logoutUser = async (): Promise<{ error: null } | { error: string }> => {
+  if (!auth) {
+    // Still clear localStorage even if Firebase isn't configured
+    removeStorageItem(STORAGE_KEYS.AUTH_USER);
+    return { error: null };
+  }
+
   try {
     await signOut(auth);
     
@@ -118,6 +132,6 @@ export const logoutUser = async (): Promise<{ error: null } | { error: string }>
  * Get current user from Firebase Auth
  */
 export const getCurrentUser = (): User | null => {
-  return auth.currentUser;
+  return auth?.currentUser ?? null;
 };
 

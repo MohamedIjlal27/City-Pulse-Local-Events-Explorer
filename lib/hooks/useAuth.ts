@@ -37,6 +37,12 @@ export function useAuth() {
       setUser(storedUser);
     }
 
+    // If Firebase is not configured, just use localStorage
+    if (!auth) {
+      setLoading(false);
+      return;
+    }
+
     // Listen to auth state changes
     const unsubscribe = onAuthStateChanged(
       auth,
