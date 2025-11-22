@@ -12,7 +12,7 @@ export default function Home() {
   const { user, loading, isAuthenticated } = useAuth();
   const { events, loading: searchLoading, error: searchError, search } = useEventSearch();
   const { toggleFavorite, checkIsFavorite } = useFavorites();
-  const { language, toggleLanguage, t } = useLanguage();
+  const { language, toggleLanguage, t, formatDateShort } = useLanguage();
   const [searchKeyword, setSearchKeyword] = useState('');
   const [searchCity, setSearchCity] = useState('');
 
@@ -35,10 +35,10 @@ export default function Home() {
           <div className="flex h-16 items-center justify-between">
             <div className="flex items-center">
               <h1 className="text-xl font-bold text-black dark:text-white">
-                City Pulse
-          </h1>
+                {t('cityPulse')}
+              </h1>
               <span className="ml-2 text-sm text-zinc-600 dark:text-zinc-400">
-                Local Events Explorer
+                {t('localEventsExplorer')}
               </span>
             </div>
             <nav className="flex items-center gap-4">
@@ -138,7 +138,7 @@ export default function Home() {
                 </h3>
                 <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                   {events.map((event) => (
-                    <EventCard key={event.id} event={event} toggleFavorite={toggleFavorite} checkIsFavorite={checkIsFavorite} t={t} />
+                    <EventCard key={event.id} event={event} toggleFavorite={toggleFavorite} checkIsFavorite={checkIsFavorite} t={t} formatDateShort={formatDateShort} />
                   ))}
                 </div>
               </div>
@@ -211,7 +211,7 @@ export default function Home() {
       <footer className="border-t border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
           <p className="text-center text-sm text-zinc-600 dark:text-zinc-400">
-            © {new Date().getFullYear()} City Pulse. All rights reserved.
+            {t('copyright')} {new Date().getFullYear()} {t('cityPulse')}. {t('allRightsReserved')}.
           </p>
         </div>
       </footer>
@@ -223,23 +223,16 @@ function EventCard({
   event, 
   toggleFavorite, 
   checkIsFavorite, 
-  t 
+  t,
+  formatDateShort
 }: { 
   event: LocalEvent;
   toggleFavorite: (event: LocalEvent) => boolean;
   checkIsFavorite: (eventId: string) => boolean;
   t: (key: keyof typeof translations.en) => string;
+  formatDateShort: (date: string) => string;
 }) {
   const isFav = checkIsFavorite(event.id);
-
-  const formatDate = (date: string) => {
-    return new Date(date).toLocaleDateString('en-US', {
-      weekday: 'short',
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-    });
-  };
 
   const handleFavoriteClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -276,7 +269,7 @@ function EventCard({
           <div className="space-y-2 text-sm">
             <div className="flex items-center text-zinc-600 dark:text-zinc-400">
               <span className="mr-2">📅</span>
-              {formatDate(event.date)} {event.time && `at ${event.time}`}
+              {formatDateShort(event.date)} {event.time && `${t('at')} ${event.time}`}
             </div>
             <div className="flex items-center text-zinc-600 dark:text-zinc-400">
               <span className="mr-2">📍</span>
@@ -285,7 +278,7 @@ function EventCard({
             {event.price && (
               <div className="flex items-center text-zinc-600 dark:text-zinc-400">
                 <span className="mr-2">💰</span>
-                From ${event.price}
+                {t('from')} ${event.price}
               </div>
             )}
             <div className="flex items-center gap-2 mt-3">
