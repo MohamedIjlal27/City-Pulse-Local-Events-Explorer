@@ -80,15 +80,41 @@ A modern React/Next.js application for discovering and exploring local events us
    ```
 
 5. **Open your browser**
-   ```
-   http://localhost:3000
-   ```
+   
+   Navigate to [http://localhost:3000](http://localhost:3000) in your browser.
+   
+   The app will start with a splash screen and automatically redirect to the home page.
 
 ### Build for Production
 
 ```bash
+# Build the application
 npm run build
+
+# Start the production server
 npm start
+```
+
+The production server will run on `http://localhost:3000` by default.
+
+### Quick Start (Development)
+
+```bash
+# Install dependencies
+npm install
+
+# Set up environment variables (create .env.local file)
+# See "Configure environment variables" section above
+
+# Start development server
+npm run dev
+```
+
+### Quick Start (Production)
+
+```bash
+# Build and start production server
+npm run build && npm start
 ```
 
 ## 📁 Project Structure
@@ -147,20 +173,27 @@ Implemented authentication methods:
 
 1. **API Rate Limits**: The app handles Ticketmaster API rate limits gracefully with error messages
 2. **Event Images**: Some events may not have images - placeholder icons are shown
-3. **Location Data**: Event locations may be "TBD" - handled with fallback text
-4. **User Display Names**: If no display name, email username is used
-5. **RTL Support**: Arabic translations use placeholder text (as per requirements)
-6. **Pagination**: Default page size is 12 events per page
-7. **City Dropdown**: Cities are fetched from Ticketmaster API and cached for 24 hours
+3. **Location Data**: Event locations may be "TBD" - handled with fallback text. Some events may not have coordinates for map preview
+4. **User Display Names**: If no display name, email username is used. If no email, "User" is displayed
+5. **RTL Support**: Arabic translations use placeholder text (as per requirements - RTL layout applies, actual Arabic syntax not required)
+6. **Pagination**: Default page size is 12 events per page (changed from 10 as per requirements)
+7. **City Dropdown**: Cities are fetched from Ticketmaster API and cached for 24 hours to reduce API calls
+8. **Firebase Configuration**: Firebase is optional - app works without it but authentication features won't be available
+9. **LocalStorage**: All user data persists in browser localStorage (no backend database required)
+10. **Splash Screen**: Brief 500ms display before redirecting to home page
+11. **Event Categories**: Some events may have "Undefined" category from API - filtered out in display
+12. **Browser Support**: Modern browsers with localStorage and ES6+ support required
 
 ## 🌐 Live Link
 
-*Add your deployed link here if hosting on Vercel/Netlify/etc.*
+**Live Application**: [https://city-pulse-local-events-explorer.vercel.app/](https://city-pulse-local-events-explorer.vercel.app/)
+
+The application is hosted on Vercel and is accessible at the link above.
 
 ## 📱 Navigation Flow
 
-1. **Splash Screen** (`/splash`) → Auto-redirects to Home after 2 seconds
-2. **Home** (`/`) → Search events, view results
+1. **Splash Screen** (`/`) → Auto-redirects to Home after 500ms
+2. **Home** (`/home`) → Search events, view results
 3. **Event Details** (`/events/[id]`) → View full event information
 4. **Profile** (`/profile`) → View user info and saved events
 
