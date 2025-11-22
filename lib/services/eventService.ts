@@ -8,6 +8,7 @@ interface TicketmasterEvent {
   type: string;
   url: string;
   locale: string;
+  description?: string;
   images: Array<{
     ratio: string;
     url: string;
@@ -37,7 +38,15 @@ interface TicketmasterEvent {
       id: string;
       name: string;
     };
-    genre: {
+    genre?: {
+      id: string;
+      name: string;
+    };
+    subType?: {
+      id: string;
+      name: string;
+    };
+    type?: {
       id: string;
       name: string;
     };
@@ -94,39 +103,71 @@ interface TicketmasterResponse {
 }
 
 const mapTicketmasterEvent = (event: TicketmasterEvent): LocalEvent => {
-  const venue = event._embedded.venues[0];
-  const classification = event.classifications[0];
-  const image = event.images.find(img => img.ratio === '16_9' && img.width >= 1024) || event.images[0];
+  const venue = event._embedded?.venues?.[0];
+  const classification = event.classifications?.[0];
+  const image = event.images?.find(img => img.ratio === '16_9' && img.width >= 1024) || event.images?.[0];
+
+  const segmentName = classification?.segment?.name;
+  const genreName = classification?.genre?.name;
+  const subTypeName = classification?.subType?.name;
+  const typeName = classification?.type?.name;
+
+  const category = segmentName && segmentName !== 'Undefined' 
+    ? segmentName 
+    : typeName && typeName !== 'Undefined'
+    ? typeName
+    : 'Event';
+
+  const descriptionParts = [];
+  if (segmentName && segmentName !== 'Undefined') {
+    descriptionParts.push(segmentName);
+  }
+  if (genreName && genreName !== 'Undefined') {
+    descriptionParts.push(genreName);
+  }
+  if (subTypeName && subTypeName !== 'Undefined') {
+    descriptionParts.push(subTypeName);
+  }
+  const description = descriptionParts.length > 0 
+    ? descriptionParts.join(' - ') 
+    : event.description || 'Event';
+
+  const tags = [
+    segmentName && segmentName !== 'Undefined' ? segmentName : null,
+    genreName && genreName !== 'Undefined' ? genreName : null,
+    subTypeName && subTypeName !== 'Undefined' ? subTypeName : null,
+  ].filter(Boolean) as string[];
 
   return {
     id: event.id,
     title: event.name,
-    description: `${classification?.segment?.name || 'Event'} - ${classification?.genre?.name || ''}`,
-    date: event.dates.start.localDate,
-    time: event.dates.start.localTime || '',
+    description,
+    date: event.dates?.start?.localDate || '',
+    time: event.dates?.start?.localTime || '',
     location: venue
-      ? `${venue.name}, ${venue.city.name}, ${venue.state.stateCode}`
+      ? `${venue.name}, ${venue.city?.name || ''}, ${venue.state?.stateCode || ''}`
       : 'Location TBD',
-    category: classification?.segment?.name || 'Other',
+    category,
     imageUrl: image?.url,
     price: event.priceRanges?.[0]?.min,
-    organizer: event._embedded.attractions?.[0]?.name,
-    tags: [
-      classification?.segment?.name,
-      classification?.genre?.name,
-    ].filter(Boolean) as string[],
+    organizer: event._embedded?.attractions?.[0]?.name,
+    tags,
   };
 };
 
 export const searchEventsFromAPI = async (
   keyword: string,
   city?: string,
-  size: number = 20
-): Promise<{ events: LocalEvent[]; error: null } | { events: []; error: string }> => {
+  size: number = 20,
+  page: number = 0
+): Promise<
+  | { events: LocalEvent[]; pagination: { currentPage: number; totalPages: number; totalElements: number; pageSize: number }; error: null }
+  | { events: []; pagination: null; error: string }
+> => {
   const apiKey = process.env.NEXT_PUBLIC_TICKETMASTER_API_KEY;
 
   if (!apiKey) {
-    return { events: [], error: 'Ticketmaster API key is not configured' };
+    return { events: [], pagination: null, error: 'Ticketmaster API key is not configured' };
   }
 
   try {
@@ -135,6 +176,7 @@ export const searchEventsFromAPI = async (
       locale: '*',
       keyword: keyword,
       size: size.toString(),
+      page: page.toString(),
       sort: 'date,asc',
     });
 
@@ -150,6 +192,7 @@ export const searchEventsFromAPI = async (
       if (response.status === 429) {
         return {
           events: [],
+          pagination: null,
           error: 'Rate limit exceeded. Please try again later.',
         };
       }
@@ -159,12 +202,14 @@ export const searchEventsFromAPI = async (
       if (errorData.fault?.faultstring) {
         return {
           events: [],
+          pagination: null,
           error: errorData.fault.faultstring,
         };
       }
 
       return {
         events: [],
+        pagination: null,
         error: errorData.error?.message || `API error: ${response.status}`,
       };
     }
@@ -172,15 +217,34 @@ export const searchEventsFromAPI = async (
     const data: TicketmasterResponse = await response.json();
 
     if (!data._embedded?.events) {
-      return { events: [], error: null };
+      return {
+        events: [],
+        pagination: {
+          currentPage: 0,
+          totalPages: 0,
+          totalElements: 0,
+          pageSize: size,
+        },
+        error: null,
+      };
     }
 
     const events = data._embedded.events.map(mapTicketmasterEvent);
 
-    return { events, error: null };
+    return {
+      events,
+      pagination: {
+        currentPage: data.page.number,
+        totalPages: data.page.totalPages,
+        totalElements: data.page.totalElements,
+        pageSize: data.page.size,
+      },
+      error: null,
+    };
   } catch (error: any) {
     return {
       events: [],
+      pagination: null,
       error: error.message || 'Failed to fetch events',
     };
   }
