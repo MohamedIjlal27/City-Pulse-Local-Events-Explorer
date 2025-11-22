@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { searchEventsFromAPI } from '@/lib/services/eventService';
+import { addRecentSearch } from '@/lib/services/userService';
 import { LocalEvent } from '@/lib/types';
 
 interface PaginationInfo {
@@ -30,6 +31,11 @@ export function useEventSearch() {
     setError(null);
     setCurrentKeyword(keyword);
     setCurrentCity(city || '');
+
+    if (page === 0) {
+      const searchQuery = city ? `${keyword} in ${city}` : keyword;
+      addRecentSearch(searchQuery);
+    }
 
     const result = await searchEventsFromAPI(keyword, city, 10, page);
 
