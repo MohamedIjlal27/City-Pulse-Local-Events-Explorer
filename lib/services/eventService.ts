@@ -138,6 +138,9 @@ const mapTicketmasterEvent = (event: TicketmasterEvent): LocalEvent => {
     subTypeName && subTypeName !== 'Undefined' ? subTypeName : null,
   ].filter(Boolean) as string[];
 
+  const latitude = venue?.location?.latitude ? parseFloat(venue.location.latitude) : undefined;
+  const longitude = venue?.location?.longitude ? parseFloat(venue.location.longitude) : undefined;
+
   return {
     id: event.id,
     title: event.name,
@@ -152,6 +155,8 @@ const mapTicketmasterEvent = (event: TicketmasterEvent): LocalEvent => {
     price: event.priceRanges?.[0]?.min,
     organizer: event._embedded?.attractions?.[0]?.name,
     tags,
+    latitude,
+    longitude,
   };
 };
 

@@ -7,6 +7,7 @@ import { useAuth } from '@/lib/hooks/useAuth';
 import { useFavorites } from '@/lib/hooks/useFavorites';
 import { useLanguage } from '@/lib/utils/i18n';
 import { AppHeader } from '@/lib/components/navigation';
+import { MapPreview } from '@/lib/components/maps';
 import { getEventByIdFromAPI } from '@/lib/services/eventService';
 import { LocalEvent } from '@/lib/types';
 import { ErrorAlert } from '@/lib/components/forms';
@@ -145,6 +146,19 @@ function EventDetailContent() {
               <span className="text-2xl">📍</span>
               <p>{event.location}</p>
             </div>
+
+            {event.latitude && event.longitude && (
+              <div className="mt-6">
+                <h3 className="text-lg font-semibold text-black dark:text-white mb-3">
+                  📍 {event.location}
+                </h3>
+                <MapPreview
+                  latitude={event.latitude}
+                  longitude={event.longitude}
+                  title={event.title}
+                />
+              </div>
+            )}
 
             {event.price && (
               <div className="flex items-center gap-2 text-zinc-600 dark:text-zinc-400">

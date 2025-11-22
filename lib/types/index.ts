@@ -15,6 +15,8 @@ export interface LocalEvent {
   price?: number;
   organizer?: string;
   tags?: string[];
+  latitude?: number;
+  longitude?: number;
 }
 
 export interface UserPreferences {
