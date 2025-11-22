@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { useLanguage } from '@/lib/utils/i18n';
@@ -8,11 +8,37 @@ import { UserProfileLink } from './UserProfileLink';
 
 export function AppHeader() {
   const { user, isAuthenticated } = useAuth();
-  const { language, toggleLanguage, t, mounted } = useLanguage();
+  const { language, setLanguage, t, mounted } = useLanguage();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [languageDropdownOpen, setLanguageDropdownOpen] = useState(false);
+  const languageDropdownRef = useRef<HTMLDivElement>(null);
 
   const toggleMobileMenu = () => setMobileMenuOpen(!mobileMenuOpen);
   const closeMobileMenu = () => setMobileMenuOpen(false);
+  const toggleLanguageDropdown = () => setLanguageDropdownOpen(!languageDropdownOpen);
+  const closeLanguageDropdown = () => setLanguageDropdownOpen(false);
+
+  const handleLanguageChange = (lang: 'en' | 'ar') => {
+    setLanguage(lang);
+    closeLanguageDropdown();
+  };
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (languageDropdownRef.current && !languageDropdownRef.current.contains(event.target as Node)) {
+        closeLanguageDropdown();
+      }
+    };
+
+    if (languageDropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [languageDropdownOpen]);
 
   return (
     <header className="border-b border-zinc-200 dark:border-zinc-800 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-md sticky top-0 z-50 shadow-sm">
@@ -40,13 +66,20 @@ export function AppHeader() {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-2 sm:gap-3">
+            <Link
+              href="/home"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-zinc-700 dark:text-zinc-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-all duration-200 border border-transparent hover:border-blue-200 dark:hover:border-blue-800"
+            >
+              <span className="text-base">🏠</span>
+              {t('home')}
+            </Link>
             {isAuthenticated && (
               <>
                 <Link
                   href="/events"
-                  className="inline-flex items-center px-4 py-2 text-sm font-medium text-zinc-700 dark:text-zinc-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-all duration-200"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-zinc-700 dark:text-zinc-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-all duration-200 border border-transparent hover:border-blue-200 dark:hover:border-blue-800"
                 >
-                  <span className="mr-1.5">📅</span>
+                  <span className="text-base">📅</span>
                   {t('events')}
                 </Link>
                 {user && <UserProfileLink user={user} />}
@@ -54,13 +87,43 @@ export function AppHeader() {
             )}
 
             {mounted && (
-              <button
-                onClick={toggleLanguage}
-                className="px-3 py-1.5 rounded-lg bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 text-sm font-medium hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors border border-zinc-200 dark:border-zinc-700"
-                aria-label={t('language')}
-              >
-                {language === 'en' ? 'العربية' : 'English'}
-              </button>
+              <div className="relative" ref={languageDropdownRef}>
+                <button
+                  onClick={toggleLanguageDropdown}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 text-sm font-medium hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors border border-zinc-200 dark:border-zinc-700"
+                  aria-label={t('language')}
+                >
+                  <span className="text-lg">🌐</span>
+                  <span>{t('language')}</span>
+                  <svg className={`w-4 h-4 transition-transform ${languageDropdownOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+                {languageDropdownOpen && (
+                  <div className="absolute right-0 mt-2 w-40 bg-white dark:bg-zinc-800 rounded-lg shadow-lg border border-zinc-200 dark:border-zinc-700 py-1 z-50">
+                    <button
+                      onClick={() => handleLanguageChange('en')}
+                      className={`w-full text-left px-4 py-2 text-sm hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors ${
+                        language === 'en'
+                          ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 font-semibold'
+                          : 'text-zinc-700 dark:text-zinc-300'
+                      }`}
+                    >
+                      {language === 'en' && '✓ '}English
+                    </button>
+                    <button
+                      onClick={() => handleLanguageChange('ar')}
+                      className={`w-full text-left px-4 py-2 text-sm hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors ${
+                        language === 'ar'
+                          ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 font-semibold'
+                          : 'text-zinc-700 dark:text-zinc-300'
+                      }`}
+                    >
+                      {language === 'ar' && '✓ '}العربية
+                    </button>
+                  </div>
+                )}
+              </div>
             )}
 
             {!isAuthenticated && (
@@ -83,15 +146,6 @@ export function AppHeader() {
 
           {/* Mobile Menu Button */}
           <div className="flex items-center gap-2 md:hidden">
-            {mounted && (
-              <button
-                onClick={toggleLanguage}
-                className="px-2 py-1.5 rounded-lg bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 text-xs font-medium hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors border border-zinc-200 dark:border-zinc-700"
-                aria-label={t('language')}
-              >
-                {language === 'en' ? 'AR' : 'EN'}
-              </button>
-            )}
             <button
               onClick={toggleMobileMenu}
               className="p-2 rounded-lg text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
@@ -114,6 +168,14 @@ export function AppHeader() {
         {mobileMenuOpen && (
           <div className="md:hidden py-4 border-t border-zinc-200 dark:border-zinc-800">
             <nav className="flex flex-col space-y-2">
+              <Link
+                href="/home"
+                onClick={closeMobileMenu}
+                className="flex items-center px-4 py-3 text-base font-medium text-zinc-700 dark:text-zinc-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-all"
+              >
+                <span className="mr-2">🏠</span>
+                {t('home')}
+              </Link>
               {isAuthenticated && (
                 <>
                   <Link
@@ -154,6 +216,43 @@ export function AppHeader() {
                     {t('register')}
                   </Link>
                 </>
+              )}
+
+              {/* Language Selector in Mobile Menu */}
+              {mounted && (
+                <div className="pt-2 mt-2 border-t border-zinc-200 dark:border-zinc-800">
+                  <div className="px-4 py-2 text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">
+                    {t('language')}
+                  </div>
+                  <button
+                    onClick={() => {
+                      handleLanguageChange('en');
+                      closeMobileMenu();
+                    }}
+                    className={`w-full text-left flex items-center px-4 py-3 text-base font-medium transition-colors rounded-lg ${
+                      language === 'en'
+                        ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 font-semibold'
+                        : 'text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800'
+                    }`}
+                  >
+                    {language === 'en' && <span className="mr-2">✓</span>}
+                    <span>English</span>
+                  </button>
+                  <button
+                    onClick={() => {
+                      handleLanguageChange('ar');
+                      closeMobileMenu();
+                    }}
+                    className={`w-full text-left flex items-center px-4 py-3 text-base font-medium transition-colors rounded-lg ${
+                      language === 'ar'
+                        ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 font-semibold'
+                        : 'text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800'
+                    }`}
+                  >
+                    {language === 'ar' && <span className="mr-2">✓</span>}
+                    <span>العربية</span>
+                  </button>
+                </div>
               )}
             </nav>
           </div>
