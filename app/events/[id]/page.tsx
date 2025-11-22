@@ -15,7 +15,7 @@ function EventDetailContent() {
   const router = useRouter();
   const { isAuthenticated } = useAuth();
   const { toggleFavorite, checkIsFavorite } = useFavorites();
-  const { t, isRTL } = useLanguage();
+  const { t, isRTL, formatDate } = useLanguage();
   const [event, setEvent] = useState<LocalEvent | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -24,7 +24,7 @@ function EventDetailContent() {
   useEffect(() => {
     const eventId = params.id as string;
     if (!eventId) {
-      setError('Event ID is required');
+      setError(t('eventIdRequired'));
       setLoading(false);
       return;
     }
@@ -58,14 +58,6 @@ function EventDetailContent() {
     setIsFav(newFavState);
   };
 
-  const formatDate = (date: string) => {
-    return new Date(date).toLocaleDateString('en-US', {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    });
-  };
 
   if (loading) {
     return (
@@ -82,7 +74,7 @@ function EventDetailContent() {
     return (
       <div className="min-h-screen bg-zinc-50 dark:bg-black px-4 py-16">
         <div className="max-w-2xl mx-auto">
-          <ErrorAlert message={error || 'Event not found'} />
+          <ErrorAlert message={error || t('eventNotFound')} />
           <Link
             href="/"
             className="mt-4 inline-block text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
@@ -150,7 +142,7 @@ function EventDetailContent() {
               <span className="text-2xl">📅</span>
               <div>
                 <p className="font-medium">{formatDate(event.date)}</p>
-                {event.time && <p className="text-sm">{event.time}</p>}
+                {event.time && <p className="text-sm">{t('at')} {event.time}</p>}
               </div>
             </div>
 
@@ -162,7 +154,7 @@ function EventDetailContent() {
             {event.price && (
               <div className="flex items-center gap-2 text-zinc-600 dark:text-zinc-400">
                 <span className="text-2xl">💰</span>
-                <p>From ${event.price}</p>
+                <p>{t('from')} ${event.price}</p>
               </div>
             )}
 

@@ -67,23 +67,23 @@ export default function ProfilePage() {
                 {t('welcome')}
               </label>
               <p className="text-lg text-black dark:text-white">
-                {user?.displayName || user?.email || 'User'}
+                {user?.displayName || user?.email || t('user')}
               </p>
             </div>
 
             <div>
               <label className="text-sm font-medium text-zinc-600 dark:text-zinc-400">
-                Email
+                {t('email')}
               </label>
               <p className="text-lg text-black dark:text-white">{user?.email}</p>
             </div>
 
             <div>
               <label className="text-sm font-medium text-zinc-600 dark:text-zinc-400">
-                Language
+                {t('language')}
               </label>
               <p className="text-lg text-black dark:text-white">
-                {language === 'en' ? 'English' : 'العربية'} ({isRTL ? 'RTL' : 'LTR'})
+                {language === 'en' ? t('english') : t('arabic')} ({isRTL ? 'RTL' : 'LTR'})
               </p>
             </div>
           </div>
@@ -123,15 +123,8 @@ export default function ProfilePage() {
 }
 
 function EventCard({ event }: { event: LocalEvent }) {
-  const { t } = useLanguage();
+  const { t, formatDateShort } = useLanguage();
 
-  const formatDate = (date: string) => {
-    return new Date(date).toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
-    });
-  };
 
   return (
     <Link href={`/events/${event.id}`}>
@@ -148,7 +141,7 @@ function EventCard({ event }: { event: LocalEvent }) {
             {event.title}
           </h3>
           <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-2">
-            {formatDate(event.date)} {event.time && `at ${event.time}`}
+            {formatDateShort(event.date)} {event.time && `${t('at')} ${event.time}`}
           </p>
           <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-2">
             📍 {event.location}
