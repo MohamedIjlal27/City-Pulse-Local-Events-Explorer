@@ -60,7 +60,12 @@ A modern React/Next.js application for discovering and exploring local events us
 
 3. Configure environment variables
    
-   Create a `.env` file in the root directory with all required keys:
+   Create a `.env` file in the root directory and copy all keys from `.env.local`:
+   ```bash
+   cp .env.local .env
+   ```
+   
+   Or manually create a `.env` file with the following structure:
    ```env
    # Firebase Configuration
    NEXT_PUBLIC_FIREBASE_API_KEY=your_firebase_api_key
@@ -74,7 +79,7 @@ A modern React/Next.js application for discovering and exploring local events us
    NEXT_PUBLIC_TICKETMASTER_API_KEY=your_ticketmaster_api_key
    ```
    
-   All required environment variables are listed above. Replace the placeholder values with your actual API keys.
+   The `.env.local` file in the repository contains all required keys. You can copy them directly or update with your own API keys if needed.
 
 4. Start the development server
    ```bash
@@ -105,7 +110,8 @@ The production server will run on `http://localhost:3000` by default.
 # Install dependencies
 npm install
 
-# Create .env.local file with all required keys (see Setup Instructions above)
+# Copy environment variables from .env.local to .env
+cp .env.local .env
 
 # Start development server
 npm run dev
