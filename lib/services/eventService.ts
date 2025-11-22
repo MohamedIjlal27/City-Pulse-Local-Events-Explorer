@@ -158,7 +158,7 @@ const mapTicketmasterEvent = (event: TicketmasterEvent): LocalEvent => {
 export const searchEventsFromAPI = async (
   keyword: string,
   city?: string,
-  size: number = 20,
+  size: number = 10,
   page: number = 0
 ): Promise<
   | { events: LocalEvent[]; pagination: { currentPage: number; totalPages: number; totalElements: number; pageSize: number }; error: null }
