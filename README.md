@@ -77,24 +77,6 @@ All localStorage operations are handled through the `storage.ts` utility, which:
 - Provides type-safe operations
 - Handles errors gracefully
 
-### Example Usage
-
-```typescript
-import { useLocalStorage } from '@/lib';
-
-function MyComponent() {
-  const [value, setValue, removeValue] = useLocalStorage('myKey', 'default');
-  
-  return (
-    <div>
-      <p>{value}</p>
-      <button onClick={() => setValue('new value')}>Update</button>
-      <button onClick={removeValue}>Clear</button>
-    </div>
-  );
-}
-```
-
 ## Best Practices
 
 1. **Always use the lib folder** for shared logic - don't duplicate code
