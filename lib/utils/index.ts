@@ -1,6 +1,3 @@
-/**
- * Central export point for utility functions
- */
-
 export * from './storage';
+export * from './authHelpers';
 

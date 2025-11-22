@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { onAuthStateChanged, User } from 'firebase/auth';
+import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '@/lib/config/firebase';
 import { AuthUser } from '@/lib/types';
 import { getStorageItem, setStorageItem, removeStorageItem } from '@/lib/utils/storage';
@@ -18,42 +18,24 @@ import {
 } from '@/lib/services/authService';
 import { RegisterData, LoginData, EmailLinkActionCodeSettings } from '@/lib/types';
 import { ActionCodeSettings } from 'firebase/auth';
+import { mapFirebaseUser } from '@/lib/utils/authHelpers';
 
-/**
- * Convert Firebase User to AuthUser
- */
-const mapFirebaseUser = (user: User | null): AuthUser | null => {
-  if (!user) return null;
-  return {
-    uid: user.uid,
-    email: user.email,
-    displayName: user.displayName,
-    photoURL: user.photoURL,
-  };
-};
-
-/**
- * Custom hook for authentication
- */
 export function useAuth() {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // Check localStorage first for faster initial load
     const storedUser = getStorageItem<AuthUser>(STORAGE_KEYS.AUTH_USER);
     if (storedUser) {
       setUser(storedUser);
     }
 
-    // If Firebase is not configured, just use localStorage
     if (!auth) {
       setLoading(false);
       return;
     }
 
-    // Listen to auth state changes
     const unsubscribe = onAuthStateChanged(
       auth,
       (firebaseUser) => {
@@ -61,7 +43,6 @@ export function useAuth() {
         setUser(authUser);
         setLoading(false);
         
-        // Sync with localStorage
         if (authUser) {
           setStorageItem(STORAGE_KEYS.AUTH_USER, authUser);
         } else {
