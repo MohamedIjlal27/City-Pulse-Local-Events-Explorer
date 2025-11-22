@@ -217,23 +217,27 @@ export const translations = {
 };
 
 export function useLanguage() {
-  const [language, setLanguage] = useState<Language>(() => {
-    if (typeof window !== 'undefined') {
-      return getStorageItem<Language>(STORAGE_KEY) || 'en';
-    }
-    return 'en';
-  });
-
-  const [isRTL, setIsRTL] = useState(language === 'ar');
+  const [language, setLanguage] = useState<Language>('en');
+  const [isRTL, setIsRTL] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
+    setMounted(true);
+    const storedLanguage = getStorageItem<Language>(STORAGE_KEY) || 'en';
+    setLanguage(storedLanguage);
+    setIsRTL(storedLanguage === 'ar');
+    document.documentElement.setAttribute('dir', storedLanguage === 'ar' ? 'rtl' : 'ltr');
+    document.documentElement.setAttribute('lang', storedLanguage);
+  }, []);
+
+  useEffect(() => {
+    if (mounted) {
       setStorageItem(STORAGE_KEY, language);
       setIsRTL(language === 'ar');
       document.documentElement.setAttribute('dir', language === 'ar' ? 'rtl' : 'ltr');
       document.documentElement.setAttribute('lang', language);
     }
-  }, [language]);
+  }, [language, mounted]);
 
   const toggleLanguage = () => {
     setLanguage((prev) => (prev === 'en' ? 'ar' : 'en'));
@@ -277,5 +281,6 @@ export function useLanguage() {
     setLanguage,
     formatDate,
     formatDateShort,
+    mounted,
   };
 }
