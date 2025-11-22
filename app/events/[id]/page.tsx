@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { useFavorites } from '@/lib/hooks/useFavorites';
 import { useLanguage } from '@/lib/utils/i18n';
+import { UserProfileLink } from '@/lib/components/navigation';
 import { getEventByIdFromAPI } from '@/lib/services/eventService';
 import { LocalEvent } from '@/lib/types';
 import { ErrorAlert } from '@/lib/components/forms';
@@ -13,7 +14,7 @@ import { ErrorAlert } from '@/lib/components/forms';
 function EventDetailContent() {
   const params = useParams();
   const router = useRouter();
-  const { isAuthenticated } = useAuth();
+  const { user, isAuthenticated } = useAuth();
   const { toggleFavorite, checkIsFavorite } = useFavorites();
   const { t, isRTL, formatDate } = useLanguage();
   const [event, setEvent] = useState<LocalEvent | null>(null);
@@ -110,12 +111,7 @@ function EventDetailContent() {
                   {isFav ? '❤️ ' + t('unfavorite') : '🤍 ' + t('favorite')}
                 </button>
               )}
-              <Link
-                href="/profile"
-                className="text-sm font-medium text-zinc-700 hover:text-zinc-900 dark:text-zinc-300 dark:hover:text-white"
-              >
-                {t('profile')}
-              </Link>
+              {user && <UserProfileLink user={user} />}
             </div>
           </div>
         </div>

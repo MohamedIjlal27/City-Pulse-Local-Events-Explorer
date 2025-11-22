@@ -6,6 +6,7 @@ import { useEventSearch } from '@/lib/hooks/useEventSearch';
 import { useFavorites } from '@/lib/hooks/useFavorites';
 import { useCities } from '@/lib/hooks/useCities';
 import { useLanguage, translations } from '@/lib/utils/i18n';
+import { UserProfileLink } from '@/lib/components/navigation';
 import Link from 'next/link';
 import { LocalEvent } from '@/lib/types';
 
@@ -52,14 +53,9 @@ export default function Home() {
                   {language === 'en' ? 'العربية' : 'English'}
                 </button>
               )}
-              {isAuthenticated ? (
+              {isAuthenticated && user ? (
                 <>
-                  <Link
-                    href="/profile"
-                    className="text-sm font-medium text-zinc-700 hover:text-zinc-900 dark:text-zinc-300 dark:hover:text-white transition-colors"
-                  >
-                    {t('profile')}
-                  </Link>
+                  <UserProfileLink user={user} />
                 </>
               ) : (
                 <>

@@ -1,0 +1,2 @@
+export { UserProfileLink } from './UserProfileLink';
+

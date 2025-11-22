@@ -6,11 +6,12 @@ import { useEventSearch } from '@/lib/hooks/useEventSearch';
 import { useFavorites } from '@/lib/hooks/useFavorites';
 import { useCities } from '@/lib/hooks/useCities';
 import { useLanguage, translations } from '@/lib/utils/i18n';
+import { UserProfileLink } from '@/lib/components/navigation';
 import Link from 'next/link';
 import { LocalEvent } from '@/lib/types';
 
 export default function EventsPage() {
-  const { isAuthenticated } = useAuth();
+  const { user, isAuthenticated } = useAuth();
   const { events, loading: searchLoading, error: searchError, pagination, search, goToPage, nextPage, prevPage } = useEventSearch();
   const { favorites, toggleFavorite, checkIsFavorite } = useFavorites();
   const { cities, loading: citiesLoading } = useCities();
@@ -46,13 +47,8 @@ export default function EventsPage() {
                   {language === 'en' ? 'العربية' : 'English'}
                 </button>
               )}
-              {isAuthenticated && (
-                <Link
-                  href="/profile"
-                  className="text-sm font-medium text-zinc-700 hover:text-zinc-900 dark:text-zinc-300 dark:hover:text-white transition-colors"
-                >
-                  {t('profile')}
-                </Link>
+              {isAuthenticated && user && (
+                <UserProfileLink user={user} />
               )}
             </nav>
           </div>
