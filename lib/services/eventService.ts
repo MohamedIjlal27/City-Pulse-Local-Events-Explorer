@@ -146,7 +146,22 @@ export const searchEventsFromAPI = async (
     );
 
     if (!response.ok) {
+      if (response.status === 429) {
+        return {
+          events: [],
+          error: 'Rate limit exceeded. Please try again later.',
+        };
+      }
+
       const errorData = await response.json().catch(() => ({}));
+      
+      if (errorData.fault?.faultstring) {
+        return {
+          events: [],
+          error: errorData.fault.faultstring,
+        };
+      }
+
       return {
         events: [],
         error: errorData.error?.message || `API error: ${response.status}`,
@@ -185,6 +200,22 @@ export const getEventByIdFromAPI = async (
     );
 
     if (!response.ok) {
+      if (response.status === 429) {
+        return {
+          event: null,
+          error: 'Rate limit exceeded. Please try again later.',
+        };
+      }
+
+      const errorData = await response.json().catch(() => ({}));
+      
+      if (errorData.fault?.faultstring) {
+        return {
+          event: null,
+          error: errorData.fault.faultstring,
+        };
+      }
+
       return {
         event: null,
         error: `Failed to fetch event: ${response.status}`,
