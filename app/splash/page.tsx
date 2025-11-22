@@ -14,7 +14,7 @@ export default function SplashPage() {
     if (!loading) {
       const timer = setTimeout(() => {
         router.push('/home');
-      }, 2000);
+      }, 1000);
 
       return () => clearTimeout(timer);
     }
