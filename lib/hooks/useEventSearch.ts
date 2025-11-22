@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { searchEventsFromAPI } from '@/lib/services/eventService';
 import { LocalEvent } from '@/lib/types';
 
@@ -11,27 +11,21 @@ interface PaginationInfo {
   pageSize: number;
 }
 
-export function useEventSearch() {
+export function useEventSearch(locale: string = 'en-us') {
   const [events, setEvents] = useState<LocalEvent[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [pagination, setPagination] = useState<PaginationInfo | null>(null);
   const [currentKeyword, setCurrentKeyword] = useState<string>('');
   const [currentCity, setCurrentCity] = useState<string>('');
+  const previousLocaleRef = useRef(locale);
+  const searchParamsRef = useRef<{ keyword: string; city?: string; page: number } | null>(null);
 
-  const search = async (keyword: string, city?: string, page: number = 0) => {
-    if (!keyword.trim()) {
-      setEvents([]);
-      setPagination(null);
-      return;
-    }
-
+  const performSearch = async (keyword: string, city: string | undefined, page: number, searchLocale: string) => {
     setLoading(true);
     setError(null);
-    setCurrentKeyword(keyword);
-    setCurrentCity(city || '');
 
-    const result = await searchEventsFromAPI(keyword, city, 20, page);
+    const result = await searchEventsFromAPI(keyword, city, 20, page, searchLocale);
 
     if (result.error) {
       setError(result.error);
@@ -44,6 +38,30 @@ export function useEventSearch() {
 
     setLoading(false);
   };
+
+  const search = async (keyword: string, city?: string, page: number = 0) => {
+    if (!keyword.trim()) {
+      setEvents([]);
+      setPagination(null);
+      setCurrentKeyword('');
+      setCurrentCity('');
+      searchParamsRef.current = null;
+      return;
+    }
+
+    setCurrentKeyword(keyword);
+    setCurrentCity(city || '');
+    searchParamsRef.current = { keyword, city, page };
+    await performSearch(keyword, city, page, locale);
+  };
+
+  useEffect(() => {
+    if (previousLocaleRef.current !== locale && searchParamsRef.current) {
+      const { keyword, city, page } = searchParamsRef.current;
+      performSearch(keyword, city, page, locale);
+    }
+    previousLocaleRef.current = locale;
+  }, [locale]);
 
   const goToPage = async (page: number) => {
     if (currentKeyword && pagination && page >= 0 && page < pagination.totalPages) {

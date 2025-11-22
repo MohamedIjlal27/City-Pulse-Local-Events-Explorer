@@ -5,14 +5,16 @@ import { useAuth } from '@/lib/hooks/useAuth';
 import { useEventSearch } from '@/lib/hooks/useEventSearch';
 import { useFavorites } from '@/lib/hooks/useFavorites';
 import { useLanguage, translations } from '@/lib/utils/i18n';
+import { getTicketmasterLocale } from '@/lib/services/eventService';
 import Link from 'next/link';
 import { LocalEvent } from '@/lib/types';
 
 export default function EventsPage() {
   const { isAuthenticated } = useAuth();
-  const { events, loading: searchLoading, error: searchError, pagination, search, goToPage, nextPage, prevPage } = useEventSearch();
-  const { toggleFavorite, checkIsFavorite } = useFavorites();
   const { language, toggleLanguage, t, formatDateShort } = useLanguage();
+  const locale = getTicketmasterLocale(language);
+  const { events, loading: searchLoading, error: searchError, pagination, search, goToPage, nextPage, prevPage } = useEventSearch(locale);
+  const { toggleFavorite, checkIsFavorite } = useFavorites();
   const [searchKeyword, setSearchKeyword] = useState('');
   const [searchCity, setSearchCity] = useState('');
   const [hasSearched, setHasSearched] = useState(false);

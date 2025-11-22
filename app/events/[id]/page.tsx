@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { useFavorites } from '@/lib/hooks/useFavorites';
 import { useLanguage } from '@/lib/utils/i18n';
-import { getEventByIdFromAPI } from '@/lib/services/eventService';
+import { getEventByIdFromAPI, getTicketmasterLocale } from '@/lib/services/eventService';
 import { LocalEvent } from '@/lib/types';
 import { ErrorAlert } from '@/lib/components/forms';
 
@@ -15,7 +15,7 @@ function EventDetailContent() {
   const router = useRouter();
   const { isAuthenticated } = useAuth();
   const { toggleFavorite, checkIsFavorite } = useFavorites();
-  const { t, isRTL, formatDate } = useLanguage();
+  const { language, t, isRTL, formatDate } = useLanguage();
   const [event, setEvent] = useState<LocalEvent | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -32,8 +32,9 @@ function EventDetailContent() {
     const fetchEvent = async () => {
       setLoading(true);
       setError(null);
+      const locale = getTicketmasterLocale(language);
 
-      const result = await getEventByIdFromAPI(eventId);
+      const result = await getEventByIdFromAPI(eventId, locale);
 
       if (result.error) {
         setError(result.error);

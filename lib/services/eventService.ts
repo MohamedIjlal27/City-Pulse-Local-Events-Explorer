@@ -2,6 +2,10 @@ import { LocalEvent } from '@/lib/types';
 import { getStorageItem, setStorageItem } from '@/lib/utils/storage';
 import { STORAGE_KEYS } from '@/lib/types';
 
+export const getTicketmasterLocale = (language: 'en' | 'ar'): string => {
+  return language === 'ar' ? 'ar-sa' : 'en-us';
+};
+
 interface TicketmasterEvent {
   id: string;
   name: string;
@@ -159,7 +163,8 @@ export const searchEventsFromAPI = async (
   keyword: string,
   city?: string,
   size: number = 20,
-  page: number = 0
+  page: number = 0,
+  locale: string = 'en-us'
 ): Promise<
   | { events: LocalEvent[]; pagination: { currentPage: number; totalPages: number; totalElements: number; pageSize: number }; error: null }
   | { events: []; pagination: null; error: string }
@@ -173,7 +178,7 @@ export const searchEventsFromAPI = async (
   try {
     const params = new URLSearchParams({
       apikey: apiKey,
-      locale: '*',
+      locale: locale,
       keyword: keyword,
       size: size.toString(),
       page: page.toString(),
@@ -251,7 +256,8 @@ export const searchEventsFromAPI = async (
 };
 
 export const getEventByIdFromAPI = async (
-  eventId: string
+  eventId: string,
+  locale: string = 'en-us'
 ): Promise<{ event: LocalEvent | null; error: null } | { event: null; error: string }> => {
   const apiKey = process.env.NEXT_PUBLIC_TICKETMASTER_API_KEY;
 
@@ -262,7 +268,7 @@ export const getEventByIdFromAPI = async (
   try {
     const params = new URLSearchParams({
       apikey: apiKey,
-      locale: '*',
+      locale: locale,
     });
 
     const response = await fetch(
