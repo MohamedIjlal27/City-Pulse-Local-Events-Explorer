@@ -57,9 +57,32 @@ export default function ProfilePage() {
 
       <main className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-8">
         <div className="bg-white dark:bg-zinc-900 rounded-lg shadow-lg p-8 mb-6">
-          <h1 className="text-3xl font-bold text-black dark:text-white mb-6">
-            {t('profile')}
-          </h1>
+          <div className="flex items-center gap-6 mb-6">
+            {user?.photoURL ? (
+              <img
+                src={user.photoURL}
+                alt={user.displayName || user.email || t('user')}
+                className="w-24 h-24 rounded-full object-cover border-4 border-zinc-200 dark:border-zinc-700"
+              />
+            ) : (
+              <div className="w-24 h-24 rounded-full bg-blue-600 dark:bg-blue-500 flex items-center justify-center text-white text-3xl font-semibold border-4 border-zinc-200 dark:border-zinc-700">
+                {(user?.displayName || user?.email || 'U')
+                  .split(' ')
+                  .map((n) => n[0])
+                  .join('')
+                  .toUpperCase()
+                  .slice(0, 2)}
+              </div>
+            )}
+            <div>
+              <h1 className="text-3xl font-bold text-black dark:text-white mb-2">
+                {t('profile')}
+              </h1>
+              <p className="text-lg text-zinc-600 dark:text-zinc-400">
+                {user?.displayName || user?.email || t('user')}
+              </p>
+            </div>
+          </div>
 
           <div className="space-y-4 mb-6">
             <div>
