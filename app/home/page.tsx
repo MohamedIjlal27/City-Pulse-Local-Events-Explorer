@@ -1,39 +1,17 @@
 'use client';
 
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import { useAuth } from '@/lib/hooks/useAuth';
-import { useLanguage } from '@/lib/utils/i18n';
+import { useEventSearch } from '@/lib/hooks/useEventSearch';
+import { useFavorites } from '@/lib/hooks/useFavorites';
+import { useCities } from '@/lib/hooks/useCities';
+import { useLanguage, translations } from '@/lib/utils/i18n';
+import { AppHeader } from '@/lib/components/navigation';
+import Link from 'next/link';
+import { LocalEvent } from '@/lib/types';
 
 export default function Home() {
-  const router = useRouter();
-  const { loading } = useAuth();
-  const { t } = useLanguage();
-
-  useEffect(() => {
-    if (!loading) {
-      const timer = setTimeout(() => {
-        router.push('/home');
-      }, 2000);
-
-      return () => clearTimeout(timer);
-    }
-  }, [loading, router]);
-
-  return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-600 to-blue-800 dark:from-blue-900 dark:to-blue-950">
-      <div className="text-center">
-        <h1 className="text-5xl font-bold text-white mb-4 animate-pulse">
-          {t('cityPulse')}
-        </h1>
-        <p className="text-xl text-blue-100 mb-8">
-          {t('localEventsExplorer')}
-        </p>
-        <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-white border-r-transparent"></div>
-      </div>
-    </div>
-  );
-}
+  const { user, loading, isAuthenticated } = useAuth();
   const { events, loading: searchLoading, error: searchError, search } = useEventSearch();
   const { favorites, toggleFavorite, checkIsFavorite } = useFavorites();
   const { cities, loading: citiesLoading } = useCities();
@@ -56,7 +34,6 @@ export default function Home() {
     <div className="flex min-h-screen flex-col bg-zinc-50 dark:bg-black">
       <AppHeader />
 
-      {/* Hero Section */}
       <main className="flex-1">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
           <div className="text-center">
@@ -155,7 +132,6 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Features Section */}
           <div className="mt-24">
             <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
               <div className="rounded-lg bg-white dark:bg-zinc-900 p-6 shadow-sm border border-zinc-200 dark:border-zinc-800">
@@ -191,7 +167,6 @@ export default function Home() {
         </div>
       </main>
 
-      {/* Footer */}
       <footer className="border-t border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
           <p className="text-center text-sm text-zinc-600 dark:text-zinc-400">

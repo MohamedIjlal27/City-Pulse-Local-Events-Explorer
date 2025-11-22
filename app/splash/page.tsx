@@ -13,7 +13,7 @@ export default function SplashPage() {
   useEffect(() => {
     if (!loading) {
       const timer = setTimeout(() => {
-        router.push('/');
+        router.push('/home');
       }, 2000);
 
       return () => clearTimeout(timer);
