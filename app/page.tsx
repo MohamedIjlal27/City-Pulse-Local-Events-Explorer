@@ -249,50 +249,56 @@ function EventCard({
 
   return (
     <Link href={`/events/${event.id}`}>
-      <div className="rounded-lg bg-white dark:bg-zinc-900 shadow-sm border border-zinc-200 dark:border-zinc-800 overflow-hidden hover:shadow-md transition-shadow cursor-pointer relative">
-        {event.imageUrl && (
-          <img
-            src={event.imageUrl}
-            alt={event.title}
-            className="w-full h-48 object-cover"
-          />
-        )}
+      <div className="h-full flex flex-col rounded-lg bg-white dark:bg-zinc-900 shadow-sm border border-zinc-200 dark:border-zinc-800 overflow-hidden hover:shadow-md transition-shadow cursor-pointer relative">
+        <div className="w-full h-48 bg-zinc-200 dark:bg-zinc-800 flex-shrink-0 relative">
+          {event.imageUrl ? (
+            <img
+              src={event.imageUrl}
+              alt={event.title}
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center text-zinc-400 dark:text-zinc-600">
+              <span className="text-4xl">📅</span>
+            </div>
+          )}
+        </div>
         <button
           onClick={handleFavoriteClick}
-          className="absolute top-2 right-2 p-2 bg-white/90 dark:bg-zinc-900/90 rounded-full hover:bg-white dark:hover:bg-zinc-800 transition-colors"
+          className="absolute top-2 right-2 p-2 bg-white/90 dark:bg-zinc-900/90 rounded-full hover:bg-white dark:hover:bg-zinc-800 transition-colors z-10"
           aria-label={isFavorite ? t('unfavorite') : t('favorite')}
         >
           {isFavorite ? '❤️' : '🤍'}
         </button>
-        <div className="p-4">
+        <div className="p-4 flex-1 flex flex-col">
           <div className="flex items-start justify-between mb-2">
-            <h4 className="text-lg font-semibold text-black dark:text-white line-clamp-2">
+            <h4 className="text-lg font-semibold text-black dark:text-white line-clamp-2 flex-1">
               {event.title}
             </h4>
           </div>
-          <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-3 line-clamp-2">
+          <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-3 line-clamp-2 flex-shrink-0">
             {event.description}
           </p>
-          <div className="space-y-2 text-sm">
+          <div className="space-y-2 text-sm flex-1">
             <div className="flex items-center text-zinc-600 dark:text-zinc-400">
               <span className="mr-2">📅</span>
-              {formatDateShort(event.date)} {event.time && `${t('at')} ${event.time}`}
+              <span className="truncate">{formatDateShort(event.date)} {event.time && `${t('at')} ${event.time}`}</span>
             </div>
             <div className="flex items-center text-zinc-600 dark:text-zinc-400">
               <span className="mr-2">📍</span>
-              {event.location}
+              <span className="truncate">{event.location}</span>
             </div>
             {event.price && (
               <div className="flex items-center text-zinc-600 dark:text-zinc-400">
                 <span className="mr-2">💰</span>
-                {t('from')} ${event.price}
+                <span>{t('from')} ${event.price}</span>
               </div>
             )}
-            <div className="flex items-center gap-2 mt-3">
-              <span className="px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 text-xs rounded">
-                {event.category}
-              </span>
-            </div>
+          </div>
+          <div className="flex items-center gap-2 mt-3 flex-shrink-0">
+            <span className="px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 text-xs rounded">
+              {event.category}
+            </span>
           </div>
         </div>
       </div>
